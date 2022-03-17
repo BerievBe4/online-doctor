@@ -13,6 +13,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.DoctorType)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Rating)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -24,6 +27,9 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.DoctorType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Rating)
             </td>
             <td>
                 @Html.ActionLink("Details", "Edit", null, new { @class = "btn btn-outline-success" })

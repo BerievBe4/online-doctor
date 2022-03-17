@@ -13,6 +13,8 @@ namespace online_doctor.Models
         public string Education { get; set; }
         public DateTime Birthday { get; set; }
 
+        [Display(Name = "Рейтинг")]
+        public float? Rating { get; set; }
         [Display(Name = "Специализация")]
         public string DoctorType { get; set; }
     }

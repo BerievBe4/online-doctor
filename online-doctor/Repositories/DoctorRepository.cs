@@ -13,7 +13,11 @@ namespace online_doctor.Repositories
 
         public List<Doctor> GetAllDoctors()
         {
-            return ReturnList<Doctor>("GetAllDoctors", null).ToList<Doctor>();
+            List<Doctor> doctors = ReturnList<Doctor>("GetAllDoctors", null).ToList<Doctor>();
+            foreach (var doctor in doctors)
+                doctor.Rating = doctor.Rating == null ? 0.0f : doctor.Rating;
+
+            return doctors;
         }
     }
 }
