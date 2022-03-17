@@ -125,7 +125,7 @@ VALUES
 DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `GetAllDoctors`()
 BEGIN
-	select * from doctor join (select * from DoctorType)a on a.DocTypeId = IdDocType;
+	select * from doctor left join ( select IdDoctor, avg(Rating) as stars from ratings group by IdDoctor order by stars asc)a on a.IdDoctor = DoctorId join (select * from DoctorType)b on b.DocTypeId = IdDocType;
 END;
 
 CALL `onlinedoctor`.`GetAllDoctors`();
