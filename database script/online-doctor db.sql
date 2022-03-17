@@ -1,5 +1,7 @@
-create database DOCS;
-use DOCS;
+create database onlinedoctor;
+
+use onlinedoctor;
+
 create table UserRole(
 	RoleId int(11) NOT NULL AUTO_INCREMENT,
 	UserRole int(11),
@@ -81,14 +83,14 @@ create table Ratings(
 	foreign key (IdDoctor) references Doctor(Doctorid)
 );
 
-INSERT INTO `docs`.`userrole`
+INSERT INTO `onlinedoctor`.`userrole`
 (`UserRole`)
 VALUES
 (1),
 (2),
 (3);
 
-INSERT INTO `docs`.`users`
+INSERT INTO `onlinedoctor`.`users`
 (`FIO`,
 `Email`,
 `Birthday`,
@@ -99,12 +101,14 @@ VALUES
 ("User","test@test.com","01.01.01","Keker","Keker",1),
 ("Admin","test@test.com","01.01.01","Keker","Keker",3);
 
-INSERT INTO `docs`.`doctortype`
+INSERT INTO `onlinedoctor`.`doctortype`
 (`DoctorType`)
 VALUES
-("Медицина ебать");
+("Хирург"),
+("Терапевт"),
+("Ухо");
 
-INSERT INTO `docs`.`doctor`
+INSERT INTO `onlinedoctor`.`doctor`
 (`FIO`,
 `Email`,
 `Photo`,
@@ -114,19 +118,19 @@ INSERT INTO `docs`.`doctor`
 `IdDocType`)
 VALUES
 ("Test1","test@test.com","Kek","Keker","Keker","01.01.01",1),
-("Test2","test2@test.com","Kek","Keker","Keker","01.01.01",1),
-("Test2","test2@test.com","Kek","Keker","Keker","01.01.01",1);
+("Test2","test2@test.com","Kek","Keker","Keker","01.01.01",2),
+("Test2","test2@test.com","Kek","Keker","Keker","01.01.01",3);
 
 
 DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `GetAllDoctors`()
 BEGIN
-	select * from Doctor;
+	select * from doctor join (select * from DoctorType)a on a.DocTypeId = IdDocType;
 END;
 
-CALL `docs`.`GetAllDoctors`();
+CALL `onlinedoctor`.`GetAllDoctors`();
 
-INSERT INTO `docs`.`userrole`
+INSERT INTO `onlinedoctor`.`userrole`
 (`UserRole`)
 VALUES
 (1),
@@ -134,7 +138,7 @@ VALUES
 (3);
 
 
-INSERT INTO `docs`.`ratings`
+INSERT INTO `onlinedoctor`.`ratings`
 (`IdUser`,
 `IdDoctor`,
 `Rating`)
@@ -152,9 +156,9 @@ BEGIN
 	select * from doctor join ( select IdDoctor, avg(Rating) as stars from ratings where IdDoctor = Id  group by IdDoctor order by stars asc)a on a.IdDoctor = DoctorId;
 END;
 
-CALL `docs`.`GetStarsForDoctor`(1);
+CALL `onlinedoctor`.`GetStarsForDoctor`(1);
 
-INSERT INTO `docs`.`comments`
+INSERT INTO `onlinedoctor`.`comments`
 (`CommentText`,
 `IdUser`,
 `IdDoctor`)
@@ -167,12 +171,12 @@ BEGIN
 	select * from comments where IdDoctor = Id;
 END;
 
-CALL `docs`.`GetCommentsForDoctor`(2);
+CALL `onlinedoctor`.`GetCommentsForDoctor`(2);
 
 DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `AddComment`(DocId int,UserId int, CommentText varchar(255))
 BEGIN
-	INSERT INTO `docs`.`comments`
+	INSERT INTO `onlinedoctor`.`comments`
 (`CommentText`,
 `IdUser`,
 `IdDoctor`)
@@ -180,12 +184,12 @@ VALUES
 (CommentText, UserId, DocId);
 END;
 
-CALL `docs`.`AddComment`(2, 1, "Rabotayet ebatb");
+CALL `onlinedoctor`.`AddComment`(2, 1, "Rabotayet ebatb");
 
 DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `AddRating`(DocId int,UserId int, Rating int(11))
 BEGIN
-	INSERT INTO `docs`.`ratings`
+	INSERT INTO `onlinedoctor`.`ratings`
 (`IdUser`,
 `IdDoctor`,
 `Rating`)
@@ -193,7 +197,7 @@ VALUES
 (UserId, DocId, Rating);
 END;
 
-CALL `docs`.`AddRating`(1,1,5);
+CALL `onlinedoctor`.`AddRating`(1,1,5);
 
 DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `DeleteDoctorById`(Id int)
@@ -201,7 +205,7 @@ BEGIN
 	delete from doctor where DoctorId = Id;
 END;
 
-CALL `docs`.`DeleteDoctorById`(3);
+CALL `onlinedoctor`.`DeleteDoctorById`(3);
 
 DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `GetAppointmentsByUserId`(Id int)
@@ -221,12 +225,12 @@ BEGIN
 	select * from doctor where IdDocType = Id;
 END;
 
-CALL `docs`.`GetDoctorsByType`(1);
+CALL `onlinedoctor`.`GetDoctorsByType`(1);
 
 DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `AddAppointment`(DocId int,UserId int, TypeId int, AppointedStart dateTime, AppointedEnd dateTime)
 BEGIN
-	INSERT INTO `docs`.`appointment`
+	INSERT INTO `onlinedoctor`.`appointment`
 (`IdUser`,
 `IdDoctor`,
 `IdType`,
@@ -236,7 +240,7 @@ VALUES
 (DocId, userId, TypeId, AppointedStart, AppointedEnd);
 END;
 
-CALL `docs`.`AddAppointment`(1, 1,1, "01.01.01", "01.01.01");
+CALL `onlinedoctor`.`AddAppointment`(1, 1,1, "01.01.01", "01.01.01");
 
 DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `RegisterOrEditUser`(
@@ -249,7 +253,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `RegisterOrEditUser`(
     IdRole int(11))
 BEGIN
 IF Id = 0 THEN
-INSERT INTO `docs`.`users`
+INSERT INTO `onlinedoctor`.`users`
 (`FIO`,
 `Email`,
 `Birthday`,
@@ -271,7 +275,7 @@ ELSE
 	END IF;
 END;
 
-CALL `docs`.`RegisterOrEditUser`(1,"Sex", "Sex","01.01.01.", "Sex", "Sex", 1);
+CALL `onlinedoctor`.`RegisterOrEditUser`(1,"Sex", "Sex","01.01.01.", "Sex", "Sex", 1);
 
 DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `AddOrEditDoctor`(
@@ -285,7 +289,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `AddOrEditDoctor`(
     IdDocType int(11))
 BEGIN
 IF Id = 0 THEN
-INSERT INTO `docs`.`doctor`
+INSERT INTO `onlinedoctor`.`doctor`
 (`FIO`,
 `Email`,
 `Photo`,
@@ -309,4 +313,4 @@ ELSE
 	END IF;
 END;
 
-CALL `docs`.`AddOrEditDoctor`(1, "Sex", "Sex", "Sex", "Sex", "Sex", "01.01.01.", 1);
+CALL `onlinedoctor`.`AddOrEditDoctor`(1, "Sex", "Sex", "Sex", "Sex", "Sex", "01.01.01.", 1);
