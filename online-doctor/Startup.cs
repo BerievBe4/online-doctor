@@ -33,6 +33,7 @@ namespace online_doctor
             builder.RegisterType<MySqlConnectionProvider>().As<IDbConnectionProvider>();
 
             builder.RegisterType<DoctorRepository>();
+            builder.RegisterType<DoctorSpecializationRepository>();
 
             var container = builder.Build();
             return container.Resolve<IServiceProvider>();
