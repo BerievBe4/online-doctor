@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using online_doctor.Providers;
+using online_doctor.Repositories;
 
 namespace online_doctor
 {
@@ -27,6 +29,10 @@ namespace online_doctor
 
             var builder = new ContainerBuilder();
             builder.Populate(services);
+
+            builder.RegisterType<MySqlConnectionProvider>().As<IDbConnectionProvider>();
+
+            builder.RegisterType<DoctorRepository>();
 
             var container = builder.Build();
             return container.Resolve<IServiceProvider>();
