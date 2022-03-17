@@ -130,6 +130,15 @@ END;
 
 CALL `onlinedoctor`.`GetAllDoctors`();
 
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `GetAllDoctorTypes`()
+BEGIN
+	select * from doctortype;
+END;
+
+CALL `onlinedoctor`.`GetAllDoctorTypes`();
+
+
 INSERT INTO `onlinedoctor`.`userrole`
 (`UserRole`)
 VALUES
