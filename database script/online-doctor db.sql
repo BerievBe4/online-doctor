@@ -83,12 +83,20 @@ create table Ratings(
 	foreign key (IdDoctor) references Doctor(Doctorid)
 );
 
+# fill datas
 INSERT INTO `onlinedoctor`.`userrole`
 (`UserRole`)
 VALUES
 (1),
 (2),
 (3);
+
+INSERT INTO `onlinedoctor`.`doctortype`
+(`DoctorType`)
+VALUES
+("Хирург"),
+("Терапевт"),
+("Ухо");
 
 INSERT INTO `onlinedoctor`.`users`
 (`FIO`,
@@ -100,13 +108,6 @@ INSERT INTO `onlinedoctor`.`users`
 VALUES
 ("User","test@test.com","01.01.01","Keker","Keker",1),
 ("Admin","test@test.com","01.01.01","Keker","Keker",3);
-
-INSERT INTO `onlinedoctor`.`doctortype`
-(`DoctorType`)
-VALUES
-("Хирург"),
-("Терапевт"),
-("Ухо");
 
 INSERT INTO `onlinedoctor`.`doctor`
 (`FIO`,
@@ -120,8 +121,9 @@ VALUES
 ("Test1","test@test.com","Kek","Keker","Keker","01.01.01",1),
 ("Test2","test2@test.com","Kek","Keker","Keker","01.01.01",2),
 ("Test2","test2@test.com","Kek","Keker","Keker","01.01.01",3);
+#
 
-
+# storage procedures
 DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `GetAllDoctors`()
 BEGIN
@@ -138,13 +140,27 @@ END;
 
 CALL `onlinedoctor`.`GetAllDoctorTypes`();
 
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `RegistrationUser`(FIO varchar(255), Email varchar(255), Birthday date, Login varchar(255), UserPassword varchar(255))
+BEGIN
+	INSERT INTO `onlinedoctor`.`users` (`FIO`, `Email`, `Birthday`, `Login`, `UserPassword`, `IdRole`) 
+    VALUES(FIO, Email, Birthday, Login, UserPassword, 3);
+END
 
-INSERT INTO `onlinedoctor`.`userrole`
-(`UserRole`)
-VALUES
-(1),
-(2),
-(3);
+CALL `onlinedoctor`.`RegistrationUser`("Test", "Email", "01.01.01", "123", "123", 1);
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `GetUserByLogin`(UserLogin varchar(255))
+BEGIN
+	SELECT * FROM users WHERE Login = UserLogin;
+END;
+
+CALL `onlinedoctor`.`GetUserByLogin`("123");
+#
+
+
+
+
 
 
 INSERT INTO `onlinedoctor`.`ratings`
