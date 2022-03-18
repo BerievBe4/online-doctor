@@ -26,6 +26,7 @@ namespace online_doctor
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+            services.AddSession();
 
             var builder = new ContainerBuilder();
             builder.Populate(services);
@@ -34,6 +35,7 @@ namespace online_doctor
 
             builder.RegisterType<DoctorRepository>();
             builder.RegisterType<DoctorSpecializationRepository>();
+            builder.RegisterType<UserRepository>();
 
             var container = builder.Build();
             return container.Resolve<IServiceProvider>();
@@ -53,6 +55,7 @@ namespace online_doctor
             }
 
             app.UseStaticFiles();
+            app.UseSession();
 
             app.UseMvc(routes =>
             {
