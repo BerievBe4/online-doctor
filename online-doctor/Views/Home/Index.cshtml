@@ -4,6 +4,10 @@
     ViewData["Title"] = "Index";
 }
 
+@Html.DropDownList("Id", ViewBag.doctorSpecializations as SelectList)
+@Html.DropDownList("Id", ViewBag.sortTypes as SelectList)
+@Html.ActionLink("Apply", "Edit", "", null, new { @class = "btn btn-success" })
+
 <table class="table">
     <thead>
         <tr>
@@ -20,21 +24,22 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.FIO)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DoctorType)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Rating)
-            </td>
-            <td>
-                @Html.ActionLink("Details", "Edit", null, new { @class = "btn btn-outline-success" })
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FIO)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DoctorType)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Rating)
+                </td>
+                <td>
+                    @Html.ActionLink("More", "Edit", "", null, new { @class = "btn btn-info" })
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
