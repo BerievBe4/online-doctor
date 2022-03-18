@@ -6,7 +6,7 @@
 
 @Html.DropDownList("Id", ViewBag.doctorSpecializations as SelectList)
 @Html.DropDownList("Id", ViewBag.sortTypes as SelectList)
-@Html.ActionLink("Apply", "Edit", "", null, new { @class = "btn btn-success" })
+@Html.ActionLink("Apply", "SortDoctors", "", new {  }, new { @class = "btn btn-success" })
 
 <table class="table">
     <thead>
