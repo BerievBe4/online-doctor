@@ -27,7 +27,8 @@
                 <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">The Best Doctor</a>
             </div>
             <div class="navbar-collapse collapse">
-                @if (HttpContextAccessor.HttpContext.Session.GetString("Login") == null)
+                @{ string Loging = HttpContextAccessor.HttpContext.Session.GetString("Login"); }
+                @if (Loging == null)
                 {
                     <ul class="nav navbar-nav navbar-left">
                         <li><a asp-area="" asp-controller="Registration" asp-action="Registration"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
@@ -37,7 +38,7 @@
                 else
                 {
                     <ul class="nav navbar-nav navbar-left">
-                        <li><a asp-area="" asp-controller="Registration" asp-action="Registration">Admin</a></li>
+                        <li><a asp-area="" asp-controller="Registration" asp-action="Registration">@Loging</a></li>
                         <li><a asp-area="" asp-controller="Login" asp-action="LogOut"><span class="glyphicon glyphicon-log-out"></span> Log Out</a></li>
                     </ul>
                 }
