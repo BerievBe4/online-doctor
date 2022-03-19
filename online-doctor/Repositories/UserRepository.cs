@@ -2,6 +2,7 @@
 using online_doctor.Models;
 using online_doctor.Providers;
 using Org.BouncyCastle.Crypto.Generators;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace online_doctor.Repositories
@@ -11,6 +12,11 @@ namespace online_doctor.Repositories
         public UserRepository(IDbConnectionProvider connectionProvider) :
             base(connectionProvider)
         { }
+
+        public List<User> GetAllUsers()
+        {
+            return ReturnList<User>("GetAllUsers", null).ToList<User>();
+        }
 
         public User GetUserByLogin(string login)
         {
