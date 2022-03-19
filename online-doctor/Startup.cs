@@ -26,7 +26,9 @@ namespace online_doctor
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-            services.AddSession();
+            services.AddSession(options => {
+                options.Cookie.HttpOnly = true;
+            });
 
             var builder = new ContainerBuilder();
             builder.Populate(services);
