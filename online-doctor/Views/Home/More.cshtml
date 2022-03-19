@@ -7,19 +7,19 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-12">
+            @* О докторе *@
             <div class="row">
                 <div class="col-md-6">
-                    <h1>
-                        h3. Lorem ipsum dolor sit amet.
-                    </h1>
-                    <p>
-                        Lorem ipsum dolor sit amet, <strong>consectetur adipiscing elit</strong>. Aliquam eget sapien sapien. Curabitur in metus urna. In hac habitasse platea dictumst. Phasellus eu sem sapien, sed vestibulum velit. Nam purus nibh, lacinia non faucibus et, pharetra in dolor. Sed iaculis posuere diam ut cursus. <em>Morbi commodo sodales nisi id sodales. Proin consectetur, nisi id commodo imperdiet, metus nunc consequat lectus, id bibendum diam velit et dui.</em> Proin massa magna, vulputate nec bibendum nec, posuere nec lacus. <small>Aliquam mi erat, aliquam vel luctus eu, pharetra quis elit. Nulla euismod ultrices massa, et feugiat ipsum consequat eu.</small>
-                    </p>
+                    <h1>@Html.DisplayFor(model => model.FIO)</h1>
+                    <p>@Html.DisplayFor(model => model.About)</p>
+                    <p>@Html.DisplayFor(model => model.Education)</p>
                 </div>
                 <div class="col-md-6">
                     <img alt="Bootstrap Image Preview" src="https://www.layoutit.com/img/sports-q-c-140-140-3.jpg" width="300" height="300" />
                 </div>
             </div>
+
+            @* Часы приёма *@
             <table class="table">
                 <thead>
                     <tr>
@@ -110,67 +110,54 @@
                     </tr>
                 </tbody>
             </table>
+
+            @* Оценка доктора *@
             <nav>
-                <ul class="pagination">
-                    <li class="page-item">
-                        <a class="page-link" href="#">Previous</a>
+                <ul class="list-group list-group-horizontal">
+                    <li class="list-group-item">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1" />
+                            <label class="form-check-label" for="inlineRadio1">1</label>
+                        </div>
                     </li>
-                    <li class="page-item">
-                        <a class="page-link" href="#">1</a>
+                    <li class="list-group-item">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1" />
+                            <label class="form-check-label" for="inlineRadio1">2</label>
+                        </div>
                     </li>
-                    <li class="page-item">
-                        <a class="page-link" href="#">2</a>
+                    <li class="list-group-item">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1" />
+                            <label class="form-check-label" for="inlineRadio1">3</label>
+                        </div>
                     </li>
-                    <li class="page-item">
-                        <a class="page-link" href="#">3</a>
+                    <li class="list-group-item">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1" />
+                            <label class="form-check-label" for="inlineRadio1">4</label>
+                        </div>
                     </li>
-                    <li class="page-item">
-                        <a class="page-link" href="#">4</a>
+                    <li class="list-group-item">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1" />
+                            <label class="form-check-label" for="inlineRadio1">5</label>
+                        </div>
                     </li>
-                    <li class="page-item">
-                        <a class="page-link" href="#">5</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" href="#">Next</a>
+                    <li class="list-group-item">
+                        @Html.ActionLink("Apply", "SortDoctors", "", new { }, new { @class = "btn btn-success" })
                     </li>
                 </ul>
             </nav>
+
+            @* Поле комментариев *@
             <form role="form">
                 <div class="form-group">
-
-                    <label for="exampleInputEmail1">
-                        Email address
-                    </label>
-                    <input type="email" class="form-control" id="exampleInputEmail1" />
+                    <label for="exampleInputEmail1">Comment:</label>
+                    <input class="form-control" id="exampleInputEmail1" />
                 </div>
-                <div class="form-group">
-
-                    <label for="exampleInputPassword1">
-                        Password
-                    </label>
-                    <input type="password" class="form-control" id="exampleInputPassword1" />
-                </div>
-                <div class="form-group">
-
-                    <label for="exampleInputFile">
-                        File input
-                    </label>
-                    <input type="file" class="form-control-file" id="exampleInputFile" />
-                    <p class="help-block">
-                        Example block-level help text here.
-                    </p>
-                </div>
-                <div class="checkbox">
-
-                    <label>
-                        <input type="checkbox" /> Check me out
-                    </label>
-                </div>
-                <button type="submit" class="btn btn-primary">
-                    Submit
-                </button>
+                <button type="submit" class="btn btn-primary">Post</button>
             </form>
-
         </div>
     </div>
 </div>
