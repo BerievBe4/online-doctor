@@ -23,6 +23,7 @@ namespace online_doctor.Controllers
         [HttpPost]
         public IActionResult Registration(User user)
         {
+            // TODO Check user by id
             User existUser = _userRepository.GetUserByLogin(user.Login);
             if (existUser != null)
             {
