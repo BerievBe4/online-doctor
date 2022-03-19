@@ -5,6 +5,8 @@ namespace online_doctor.Models
 {
     public class Doctor
     {
+        public int DoctorId { get; set; }
+
         [Display(Name = "Фамилия имя отчество")]
         public string FIO { get; set; }
         public string Email { get; set; }

@@ -43,5 +43,10 @@ namespace online_doctor.Controllers
 
             return View(doctors);
         }
+
+        public IActionResult More(int doctorId)
+        {
+            return View();
+        }
     }
 }

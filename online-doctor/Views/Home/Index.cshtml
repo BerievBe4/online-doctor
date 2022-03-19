@@ -37,7 +37,7 @@
                     @Html.DisplayFor(modelItem => item.Rating)
                 </td>
                 <td>
-                    @Html.ActionLink("More", "Edit", "", null, new { @class = "btn btn-info" })
+                    @Html.ActionLink("More", "More", "Home", new { doctorId = item.DoctorId }, new { @class = "btn btn-info" })
                 </td>
             </tr>
         }
