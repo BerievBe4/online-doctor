@@ -1,0 +1,32 @@
+﻿@model online_doctor.Models.Doctor
+
+@{
+    ViewData["Title"] = "AddDoctor";
+}
+
+<h2>Add new doctor</h2>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="AddDoctor">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Login" class="control-label"></label>
+                <input asp-for="Login" class="form-control" />
+                <span asp-validation-for="Login" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DoctorPassword" class="control-label"></label>
+                <input asp-for="DoctorPassword" class="form-control" />
+                <span asp-validation-for="DoctorPassword" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <span class="field-validation-error" style="color:brown;">@Html.DisplayFor(model => Model.ErrorMessage)</span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Add doctor" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>

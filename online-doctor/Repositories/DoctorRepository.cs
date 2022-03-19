@@ -21,11 +21,35 @@ namespace online_doctor.Repositories
             return doctors;
         }
 
+        public void RegistrationDoctor(Doctor doctor)
+        {
+            DynamicParameters param = new DynamicParameters();
+            string salt = BCrypt.Net.BCrypt.GenerateSalt();
+
+            param.Add("@Login", doctor.Login);
+            string hashedPassword = BCrypt.Net.BCrypt.HashPassword(doctor.DoctorPassword, salt);
+            param.Add("@DoctorPassword", hashedPassword);
+
+            ExecuteWithoutReturn("RegistrationDoctor", param);
+        }
+
+        public void EditDoctor(Doctor doctor)
+        {
+            return;
+        }
+
         public Doctor GetDoctorById(int doctorId)
         {
             DynamicParameters param = new DynamicParameters();
             param.Add("@DoctorId", doctorId);
             return ReturnList<Doctor>("GetDoctorById", param).FirstOrDefault<Doctor>();
+        }
+
+        public Doctor GetDoctorByLogin(string Login)
+        {
+            DynamicParameters param = new DynamicParameters();
+            param.Add("@login", Login);
+            return ReturnList<Doctor>("GetDoctorByLogin", param).FirstOrDefault<Doctor>();
         }
     }
 }
