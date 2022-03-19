@@ -12,11 +12,6 @@ namespace online_doctor.Repositories
             base(connectionProvider)
         { }
 
-        public bool Login(User user)
-        {
-            return true;
-        }
-
         public User GetUserByLogin(string login)
         {
             DynamicParameters param = new DynamicParameters();
