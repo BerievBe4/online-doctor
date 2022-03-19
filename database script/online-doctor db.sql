@@ -1,10 +1,11 @@
+drop database onlinedoctor;
 create database onlinedoctor;
 
 use onlinedoctor;
 
 create table UserRole(
 	RoleId int(11) NOT NULL AUTO_INCREMENT,
-	UserRole int(11),
+	UserRole varchar(50),
 	PRIMARY KEY (RoleId)
 ) AUTO_INCREMENT=1;
 
@@ -28,6 +29,8 @@ create table DoctorType(
 
 create table Doctor(
 	DoctorId int(11) NOT NULL AUTO_INCREMENT,
+	Login varchar(255),
+    DoctorPassword text,
 	FIO varchar(50),
     Email varchar(50),
     Photo text,
@@ -39,11 +42,11 @@ create table Doctor(
     foreign key (IdDocType) references DoctorType(DocTypeId)
 ) AUTO_INCREMENT=1;
 
-
 create table DoctorWorkingHours(
 	DoctorId int(11) NOT NULL AUTO_INCREMENT,
 	StartHour time,
 	EndHour time,
+    DayOfWeek varchar(255),
 	foreign key (DoctorId) references Doctor(DoctorId)
 );
 
@@ -87,30 +90,22 @@ create table Ratings(
 INSERT INTO `onlinedoctor`.`userrole`
 (`UserRole`)
 VALUES
-(1),
-(2),
-(3);
+("Admin"),
+("User"),
+("Doctor");
 
 INSERT INTO `onlinedoctor`.`doctortype`
 (`DoctorType`)
 VALUES
+("None"),
 ("Хирург"),
 ("Терапевт"),
 ("Ухо");
 
-INSERT INTO `onlinedoctor`.`users`
-(`FIO`,
-`Email`,
-`Birthday`,
-`Login`,
-`UserPassword`,
-`IdRole`)
-VALUES
-("User","test@test.com","01.01.01","Keker","Keker",1),
-("Admin","test@test.com","01.01.01","Keker","Keker",3);
-
 INSERT INTO `onlinedoctor`.`doctor`
-(`FIO`,
+(`Login`,
+`DoctorPassword`,
+`FIO`,
 `Email`,
 `Photo`,
 `About`,
@@ -118,9 +113,9 @@ INSERT INTO `onlinedoctor`.`doctor`
 `Birthday`,
 `IdDocType`)
 VALUES
-("Test1","test@test.com","Kek","Keker","Keker","01.01.01",1),
-("Test2","test2@test.com","Kek","Keker","Keker","01.01.01",2),
-("Test2","test2@test.com","Kek","Keker","Keker","01.01.01",3);
+("", "", "Test1","test@test.com","Kek","Keker","Keker","01.01.01",2),
+("", "", "Test2","test2@test.com","Kek","Keker","Keker","01.01.01",3),
+("", "", "Test2","test2@test.com","Kek","Keker","Keker","01.01.01",4);
 #
 
 # storage procedures
@@ -144,10 +139,19 @@ DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `RegistrationUser`(FIO varchar(255), Email varchar(255), Birthday date, Login varchar(255), UserPassword varchar(255))
 BEGIN
 	INSERT INTO `onlinedoctor`.`users` (`FIO`, `Email`, `Birthday`, `Login`, `UserPassword`, `IdRole`) 
-    VALUES(FIO, Email, Birthday, Login, UserPassword, 3);
+    VALUES(FIO, Email, Birthday, Login, UserPassword, 2);
 END
 
-CALL `onlinedoctor`.`RegistrationUser`("Test", "Email", "01.01.01", "123", "123", 1);
+CALL `onlinedoctor`.`RegistrationUser`("Test", "Email", "01.01.01", "123", "123");
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `RegistrationDoctor`(Login varchar(255), DoctorPassword varchar(255))
+BEGIN
+    INSERT INTO `onlinedoctor`.`doctor` (`Login`, `DoctorPassword`, `FIO`, `Email`, `Photo`, `About`, `Education`, `Birthday`, `IdDocType`)
+	VALUES (Login, DoctorPassword, "FIO", "Email@Email.com", "Photo", "About", "Education", "01.01.01", 1);
+END
+
+CALL `onlinedoctor`.`RegistrationDoctor`("Doc1", "Doc1");
 
 DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `GetUserByLogin`(UserLogin varchar(255))
@@ -156,6 +160,30 @@ BEGIN
 END;
 
 CALL `onlinedoctor`.`GetUserByLogin`("123");
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `GetDoctorById`(DoctorId int)
+BEGIN
+	SELECT * FROM doctor WHERE DoctorId = doctorId;
+END;
+
+CALL `onlinedoctor`.`GetDoctorById`(1);
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `GetDoctorByLogin`(Login varchar(255))
+BEGIN
+	SELECT * FROM doctor WHERE doctor.Login = Login;
+END;
+
+CALL `onlinedoctor`.`GetDoctorByLogin`("");
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `GetAllUsers`()
+BEGIN
+	SELECT * FROM users;
+END;88
+
+CALL `onlinedoctor`.`GetAllUsers`();
 #
 
 
