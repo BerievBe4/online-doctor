@@ -1,4 +1,5 @@
-﻿using online_doctor.Models;
+﻿using Dapper;
+using online_doctor.Models;
 using online_doctor.Providers;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +19,13 @@ namespace online_doctor.Repositories
                 doctor.Rating = doctor.Rating == null ? 0.0f : doctor.Rating;
 
             return doctors;
+        }
+
+        public Doctor GetDoctorById(int doctorId)
+        {
+            DynamicParameters param = new DynamicParameters();
+            param.Add("@DoctorId", doctorId);
+            return ReturnList<Doctor>("GetDoctorById", param).FirstOrDefault<Doctor>();
         }
     }
 }

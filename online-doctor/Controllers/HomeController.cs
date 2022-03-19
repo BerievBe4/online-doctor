@@ -46,7 +46,8 @@ namespace online_doctor.Controllers
 
         public IActionResult More(int doctorId)
         {
-            return View();
+            Doctor doctor = _doctorRepository.GetDoctorById(doctorId);
+            return View(doctor);
         }
     }
 }
