@@ -31,6 +31,9 @@ namespace online_doctor.Models
         [Display(Name = "Повторение пароля")]
         public string RepeatUserPassword { get; set; }
 
+        [Display(Name = "Я - доктор")]
+        public bool IsDoctor { get; set; }
+
         public int IdRole { get; set; }
 
         public string ErrorMessage { get; set; }

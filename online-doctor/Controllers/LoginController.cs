@@ -9,10 +9,12 @@ namespace online_doctor.Controllers
     public class LoginController : Controller
     {
         private readonly UserRepository _userRepository;
+        private readonly DoctorRepository _doctorRepository;
 
-        public LoginController(UserRepository userRepository)
+        public LoginController(UserRepository userRepository, DoctorRepository doctorRepository)
         {
             _userRepository = userRepository;
+            _doctorRepository = doctorRepository;
         }
 
         [HttpGet]
@@ -22,24 +24,47 @@ namespace online_doctor.Controllers
         }
 
         [HttpPost]
+        // TODO inheritance from IUser (doctor and common user)
         public IActionResult Login(User user)
         {
-            User existUser = _userRepository.GetUserByLogin(user.Login);
-            if (existUser == null)
+            if (user.IsDoctor)
             {
-                user.ErrorMessage = "Неправильный логин или пароль.";
-                return View("Login", user);
-            }
+                Doctor existDoctor = _doctorRepository.GetDoctorByLogin(user.Login);
+                if (existDoctor == null)
+                {
+                    user.ErrorMessage = "Неправильный логин или пароль.";
+                    return View("Login", user);
+                }
 
-            if (!BCrypt.Net.BCrypt.Verify(user.UserPassword, existUser.UserPassword))
+                if (!BCrypt.Net.BCrypt.Verify(user.UserPassword, existDoctor.DoctorPassword))
+                {
+                    user.ErrorMessage = "Неправильный логин или пароль.";
+                    return View("Login", user);
+                }
+
+                HttpContext.Session.SetString("Login", existDoctor.Login);
+                HttpContext.Session.SetInt32("UserID", existDoctor.DoctorId);
+                HttpContext.Session.SetInt32("RoleID", 3);
+            }
+            else
             {
-                user.ErrorMessage = "Неправильный логин или пароль.";
-                return View("Login", user);
-            }
+                User existUser = _userRepository.GetUserByLogin(user.Login);
+                if (existUser == null)
+                {
+                    user.ErrorMessage = "Неправильный логин или пароль.";
+                    return View("Login", user);
+                }
 
-            HttpContext.Session.SetString("Login", existUser.Login);
-            HttpContext.Session.SetInt32("UserID", existUser.UserId);
-            HttpContext.Session.SetInt32("RoleID", existUser.IdRole);
+                if (!BCrypt.Net.BCrypt.Verify(user.UserPassword, existUser.UserPassword))
+                {
+                    user.ErrorMessage = "Неправильный логин или пароль.";
+                    return View("Login", user);
+                }
+
+                HttpContext.Session.SetString("Login", existUser.Login);
+                HttpContext.Session.SetInt32("UserID", existUser.UserId);
+                HttpContext.Session.SetInt32("RoleID", existUser.IdRole);
+            }
 
             return RedirectToAction("Index", "Home");
         }
