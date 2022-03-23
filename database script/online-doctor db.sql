@@ -164,10 +164,10 @@ CALL `onlinedoctor`.`GetUserByLogin`("123");
 DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `GetDoctorById`(DoctorId int)
 BEGIN
-	SELECT * FROM doctor WHERE DoctorId = doctorId;
+	SELECT * FROM doctor WHERE doctor.DoctorId = doctorId;
 END;
 
-CALL `onlinedoctor`.`GetDoctorById`(1);
+CALL `onlinedoctor`.`GetDoctorById`(5);
 
 DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `GetDoctorByLogin`(Login varchar(255))
@@ -184,8 +184,23 @@ BEGIN
 END;88
 
 CALL `onlinedoctor`.`GetAllUsers`();
-#
 
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `UpdateDoctorInformation`(DoctorId int(11), FIO varchar(50), Email varchar(50), Photo text, About text, Education varchar(255), Birthday Date, IdDocType int(11))
+BEGIN
+	UPDATE doctor
+    SET doctor.FIO = FIO, 
+    doctor.Email = Email,
+    doctor.Photo = Photo,
+    doctor.About = About,
+    doctor.Education = Education,
+    doctor.Birthday = Birthday, 
+    doctor.IdDocType = IdDocType
+    WHERE doctor.DoctorId = DoctorId;
+END;
+
+CALL `onlinedoctor`.`UpdateDoctorInformation`();
+#
 
 
 
