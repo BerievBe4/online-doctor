@@ -4,9 +4,9 @@
     ViewData["Title"] = "Index";
 }
 
-@Html.DropDownList("Id", ViewBag.doctorSpecializations as SelectList)
-@Html.DropDownList("Id", ViewBag.sortTypes as SelectList)
-@Html.ActionLink("Apply", "SortDoctors", "Index", new { }, new { @class = "btn btn-success" })
+@*@Html.DropDownList("DocTypeId", ViewBag.doctorSpecializations as SelectList)
+@Html.DropDownList("IDocTypeId", ViewBag.sortTypes as SelectList)
+@Html.ActionLink("Apply", "SortDoctors", "Index", new { }, new { @class = "btn btn-success" })*@
 
 @if (ViewBag.RoleID == 1)
 {

@@ -14,7 +14,7 @@ namespace online_doctor.Controllers
         void loadDoctorSpecializations()
         {
             List<DoctorSpecialization> doctorSpecializations = _doctorSpecializationRepository.GetDoctorSpecializations();
-            doctorSpecializations.Insert(0, new DoctorSpecialization { Id = 0, DoctorType = "-" });
+            doctorSpecializations.Insert(0, new DoctorSpecialization { DocTypeId = 0, DoctorType = "-" });
 
             ViewBag.doctorSpecializations = new SelectList(doctorSpecializations, "Id", "DoctorType");
         }
