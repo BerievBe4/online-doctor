@@ -226,3 +226,12 @@ __pycache__/
 
 # Windows thumbnail cache files
 Thumbs.db
+
+# Images format
+*.png
+*.jpg
+*.jpeg
+*.jfif
+*.pjpeg
+*.pjp
+*.svg
