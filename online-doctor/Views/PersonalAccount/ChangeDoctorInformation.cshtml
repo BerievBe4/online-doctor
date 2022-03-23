@@ -1,0 +1,66 @@
+﻿@model online_doctor.Models.Doctor
+
+@{
+    ViewData["Title"] = "ChangeDoctorInformation";
+}
+
+<h2>Изменение персональной информации</h2>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="ChangeDoctorInformation" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <input type="hidden" asp-for="DoctorId" class="form-control" />
+                <span asp-validation-for="DoctorId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FIO" class="control-label"></label>
+                <input asp-for="FIO" class="form-control" />
+                <span asp-validation-for="FIO" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ImageFile" class="control-label"></label>
+                <input asp-for="ImageFile" accept="image/*" />
+                <span asp-validation-for="ImageFile" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="About" class="control-label"></label>
+                <input asp-for="About" class="form-control" />
+                <span asp-validation-for="About" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Education" class="control-label"></label>
+                <input asp-for="Education" class="form-control" />
+                <span asp-validation-for="Education" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Birthday" class="control-label"></label>
+                <input asp-for="Birthday" class="form-control" />
+                <span asp-validation-for="Birthday" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DoctorSpecializations" class="control-label"></label>
+                <select asp-for="IdDocType" asp-items="@(new SelectList(Model.DoctorSpecializations, "DocTypeId", "DoctorType"))"></select>
+                <span asp-validation-for="DoctorSpecializations" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <span class="field-validation-error" style="color:brown;">@Html.DisplayFor(model => Model.ErrorMessage)</span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

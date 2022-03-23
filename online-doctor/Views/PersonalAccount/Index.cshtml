@@ -1,0 +1,10 @@
+﻿@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Здравствуйте, @ViewBag.Login!</h2>
+
+@if (ViewBag.RoleID == 3)
+{
+    @Html.ActionLink("Изменить информацию", "ChangeDoctorInformation", "PersonalAccount", new { doctorId = ViewBag.userID }, new { @class = "btn btn-success" })
+}
