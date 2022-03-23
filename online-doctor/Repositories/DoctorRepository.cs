@@ -35,7 +35,18 @@ namespace online_doctor.Repositories
 
         public void EditDoctor(Doctor doctor)
         {
-            return;
+            DynamicParameters param = new DynamicParameters();
+
+            param.Add("@DoctorId", doctor.DoctorId);
+            param.Add("@FIO", doctor.FIO);
+            param.Add("@Email", doctor.Email);
+            param.Add("@Photo", doctor.Photo);
+            param.Add("@About", doctor.About);
+            param.Add("@Education", doctor.Education);
+            param.Add("@Birthday", doctor.Birthday);
+            param.Add("@IdDocType", doctor.IdDocType);
+
+            ExecuteWithoutReturn("UpdateDoctorInformation", param);
         }
 
         public Doctor GetDoctorById(int doctorId)
