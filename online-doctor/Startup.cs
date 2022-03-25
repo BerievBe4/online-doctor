@@ -37,6 +37,7 @@ namespace online_doctor
 
             builder.RegisterType<DoctorRepository>();
             builder.RegisterType<DoctorSpecializationRepository>();
+            builder.RegisterType<AppoitmentTypeRepository>();
             builder.RegisterType<UserRepository>();
 
             var container = builder.Build();

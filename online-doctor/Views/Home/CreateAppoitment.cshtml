@@ -1,0 +1,50 @@
+﻿@model online_doctor.Models.Appointment
+
+@{
+    ViewData["Title"] = "CreateAppoitment";
+}
+
+<h2>Записаться на приём</h2>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="CreateAppoitment">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <input type="hidden" asp-for="IdUser" class="form-control" />
+                <span asp-validation-for="IdUser" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="hidden" asp-for="IdDoctor" class="form-control" />
+                <span asp-validation-for="IdDoctor" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AvailableAppoitmentTimes" class="control-label"></label>
+                <select asp-for="SelectedTime" asp-items="@(new SelectList(Model.AvailableAppoitmentTimes, "Id", "Time"))"></select>
+                <span asp-validation-for="AvailableAppoitmentTimes" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PhoneNumber" class="control-label"></label>
+                <input asp-for="PhoneNumber" class="form-control" />
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IdType" class="control-label"></label>
+                <select asp-for="IdType" class="form-control" asp-items="@ViewBag.AppoitmentType"></select>
+                <span asp-validation-for="IdType" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <span class="field-validation-error" style="color:brown;">@Html.DisplayFor(model => Model.ErrorMessage)</span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Записаться" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
