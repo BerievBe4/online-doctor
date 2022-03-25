@@ -42,17 +42,24 @@ create table Doctor(
     foreign key (IdDocType) references DoctorType(DocTypeId)
 ) AUTO_INCREMENT=1;
 
+create table DayOfWeek(
+	DayOfWeekId int(11) NOT NULL AUTO_INCREMENT,
+	Day varchar(50),
+	PRIMARY KEY (DayOfWeekId)
+) AUTO_INCREMENT=1;
+
 create table DoctorWorkingHours(
 	DoctorId int(11) NOT NULL AUTO_INCREMENT,
 	StartHour time,
 	EndHour time,
-    DayOfWeek varchar(255),
-	foreign key (DoctorId) references Doctor(DoctorId)
+    DayOfWeekId int(11),
+	foreign key (DoctorId) references Doctor(DoctorId),
+	foreign key (DayOfWeekId) references DayOfWeek(DayOfWeekId)
 );
 
 create table AppointmentType(
 	TypeId int(11) NOT NULL AUTO_INCREMENT,
-	AppointmentType varchar(50),
+	Appointment varchar(50),
 	PRIMARY KEY (TypeId)
 ) AUTO_INCREMENT=1;
 
@@ -94,6 +101,16 @@ VALUES
 ("User"),
 ("Doctor");
 
+INSERT INTO `onlinedoctor`.`DayOfWeek`
+(`Day`)
+VALUES
+("Понедельник"),
+("Вторник"),
+("Среда"),
+("Четверг"),
+("Пятница"),
+("Суббота");
+
 INSERT INTO `onlinedoctor`.`doctortype`
 (`DoctorType`)
 VALUES
@@ -101,6 +118,15 @@ VALUES
 ("Хирург"),
 ("Терапевт"),
 ("Ухо");
+
+INSERT INTO `onlinedoctor`.`AppointmentType`
+(`Appointment`)
+VALUES
+("Online"),
+("Offline");
+
+SELECT * FROM Users;
+UPDATE Users SET IdRole = 1 WHERE Users.UserId = 1;
 
 INSERT INTO `onlinedoctor`.`doctor`
 (`Login`,
@@ -181,7 +207,7 @@ DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `GetAllUsers`()
 BEGIN
 	SELECT * FROM users;
-END;88
+END;
 
 CALL `onlinedoctor`.`GetAllUsers`();
 
@@ -200,6 +226,14 @@ BEGIN
 END;
 
 CALL `onlinedoctor`.`UpdateDoctorInformation`();
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `GetAppoitmentTypes`()
+BEGIN
+	SELECT TypeId, AppointmentType as Type FROM AppointmentType;
+END;
+
+CALL `onlinedoctor`.`GetAppoitmentTypes`();
 #
 
 
