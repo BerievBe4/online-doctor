@@ -1,0 +1,39 @@
+﻿@model online_doctor.Models.DoctorWorkingHours
+
+@{
+    ViewData["Title"] = "ChangeDoctorShedule";
+}
+
+<h2>Изменение рассписания</h2>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="ChangeDoctorShedule">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="StartHour" class="control-label"></label>
+                <input asp-for="StartHour" class="form-control" />
+                <span asp-validation-for="StartHour" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EndHour" class="control-label"></label>
+                <input asp-for="EndHour" class="form-control" />
+                <span asp-validation-for="EndHour" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DayOfWeek" class="control-label"></label>
+                <input asp-for="DayOfWeek" class="form-control" />
+                <span asp-validation-for="DayOfWeek" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

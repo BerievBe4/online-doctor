@@ -73,5 +73,17 @@ namespace online_doctor.Controllers
 
             return RedirectToAction("Index", "Home");
         }
+
+        [HttpGet]
+        public IActionResult ChangeDoctorShedule(int doctorId)
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult ChangeDoctorShedule(DoctorWorkingHours doctorWorkingHours)
+        {
+            return RedirectToAction("Index", "PersonalAccount");
+        }
     }
 }
