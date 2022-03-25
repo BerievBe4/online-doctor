@@ -42,6 +42,8 @@ namespace online_doctor.Models
         public List<DoctorSpecialization> DoctorSpecializations { get; set; } = new List<DoctorSpecialization>();
         public int IdDocType { get; set; }
 
+        public List<DoctorWorkingHours> DoctorWorkingHours { get; set; } = new List<DoctorWorkingHours>();
+
         public string ErrorMessage { get; set; }
     }
 }

@@ -7,4 +7,5 @@
 @if (ViewBag.RoleID == 3)
 {
     @Html.ActionLink("Изменить информацию", "ChangeDoctorInformation", "PersonalAccount", new { doctorId = ViewBag.userID }, new { @class = "btn btn-success" })
+    @Html.ActionLink("Изменить расписание", "ChangeDoctorShedule", "PersonalAccount", new { doctorId = ViewBag.userID }, new { @class = "btn btn-success" })
 }
