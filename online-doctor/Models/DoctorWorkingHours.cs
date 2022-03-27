@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace online_doctor.Models
 {
@@ -6,12 +8,20 @@ namespace online_doctor.Models
     {
         public int DoctorId { get; set; }
 
+        [Required]
+        [Display(Name = "Время начала работы")]
         public TimeSpan StartHour { get; set; }
+        [Required]
+        [Display(Name = "Время окончания работы")]
         public TimeSpan EndHour { get; set; }
 
-        public string StringStartHour { get; set; }
-        public string StringEndHour { get; set; }
+        [Required]
+        [Display(Name = "День недели")]
+        public List<DayOfWeek> DayOfWeeks { get; set; } = new List<DayOfWeek>();
+        public int IdDayOfWeek { get; set; }
 
-        public int DayOfWeekId { get; set; }
+        public string Day { get; set; }
+
+        public string ErrorMessage { get; set; }
     }
 }

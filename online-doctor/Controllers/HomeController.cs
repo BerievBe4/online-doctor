@@ -55,6 +55,7 @@ namespace online_doctor.Controllers
             ViewBag.UserID = HttpContext.Session.GetInt32("UserID");
 
             Doctor doctor = _doctorRepository.GetDoctorById(doctorId);
+            doctor.DoctorWorkingHours = _doctorRepository.GetDoctorWorkingHours(doctorId);
             return View(doctor);
         }
 

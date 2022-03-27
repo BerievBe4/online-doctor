@@ -28,8 +28,8 @@
                     @foreach (var item in Model.DoctorWorkingHours)
                     {
                     <tr>
-                        <td>@Html.DisplayFor(modelItem => item.DayOfWeek)</td>
-                        <td>@Html.DisplayFor(modelItem => item.StringStartHour) - @Html.DisplayFor(modelItem => item.StringEndHour)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Day)</td>
+                        <td>@Html.DisplayFor(modelItem => item.StartHour) - @Html.DisplayFor(modelItem => item.EndHour)</td>
                     </tr>
                     }
                 </tbody>

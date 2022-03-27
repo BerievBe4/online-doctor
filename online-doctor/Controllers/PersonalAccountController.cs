@@ -14,14 +14,16 @@ namespace online_doctor.Controllers
         private readonly UserRepository _userRepository;
         private readonly DoctorRepository _doctorRepository;
         private readonly DoctorSpecializationRepository _doctorSpecializationRepository;
+        private readonly DayOfWeekRepository _dayOfWeekRepository;
 
         private readonly IHostingEnvironment _hostingEnvironment;
 
-        public PersonalAccountController(UserRepository userRepository, DoctorRepository doctorRepository, DoctorSpecializationRepository doctorSpecializationRepository, IHostingEnvironment hostingEnvironment)
+        public PersonalAccountController(UserRepository userRepository, DoctorRepository doctorRepository, DoctorSpecializationRepository doctorSpecializationRepository, DayOfWeekRepository dayOfWeekRepository, IHostingEnvironment hostingEnvironment)
         {
             _userRepository = userRepository;
             _doctorRepository = doctorRepository;
             _doctorSpecializationRepository = doctorSpecializationRepository;
+            _dayOfWeekRepository = dayOfWeekRepository;
             _hostingEnvironment = hostingEnvironment;
         }
 
@@ -77,12 +79,31 @@ namespace online_doctor.Controllers
         [HttpGet]
         public IActionResult ChangeDoctorShedule(int doctorId)
         {
-            return View();
+            DoctorWorkingHours doctorWorkingHours = new DoctorWorkingHours();
+            doctorWorkingHours.DayOfWeeks = _dayOfWeekRepository.GetDayOfWeeks();
+            doctorWorkingHours.DoctorId = doctorId;
+
+            return View(doctorWorkingHours);
         }
 
         [HttpPost]
         public IActionResult ChangeDoctorShedule(DoctorWorkingHours doctorWorkingHours)
         {
+            DoctorWorkingHours existDoctorWorkingHours = _doctorRepository.GetDoctorWorkingHouseByDayofWeekId(doctorWorkingHours.DoctorId, doctorWorkingHours.IdDayOfWeek);
+            if (existDoctorWorkingHours.StartHour > existDoctorWorkingHours.EndHour)
+            {
+                existDoctorWorkingHours.ErrorMessage = "Неккоректное время";
+                return View("ChangeDoctorShedule", existDoctorWorkingHours);
+            }
+
+            if (existDoctorWorkingHours != null)
+            {
+                _doctorRepository.UpdateDoctorWorkingHourByDayOfWeekId(doctorWorkingHours);
+
+                return RedirectToAction("Index", "PersonalAccount");
+            }
+
+            _doctorRepository.AddDoctorWorkingHouse(existDoctorWorkingHours);
             return RedirectToAction("Index", "PersonalAccount");
         }
     }

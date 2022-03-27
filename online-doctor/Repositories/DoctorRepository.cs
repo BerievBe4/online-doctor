@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using online_doctor.Models;
 using online_doctor.Providers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -61,6 +62,41 @@ namespace online_doctor.Repositories
             DynamicParameters param = new DynamicParameters();
             param.Add("@login", Login);
             return ReturnList<Doctor>("GetDoctorByLogin", param).FirstOrDefault<Doctor>();
+        }
+
+        public List<DoctorWorkingHours> GetDoctorWorkingHours(int doctorId)
+        {
+            DynamicParameters param = new DynamicParameters();
+            param.Add("@DoctorId", doctorId);
+            return ReturnList<DoctorWorkingHours>("GetDoctorWorkingHouse", param).ToList<DoctorWorkingHours>();
+        }
+
+        public DoctorWorkingHours GetDoctorWorkingHouseByDayofWeekId(int DoctorId, int DayOfWeekId)
+        {
+            DynamicParameters param = new DynamicParameters();
+            param.Add("@DoctorId", DoctorId);
+            param.Add("@DayOfWeekId", DayOfWeekId);
+            return ReturnList<DoctorWorkingHours>("GetDoctorWorkingHouseByDayofWeekId", param).FirstOrDefault<DoctorWorkingHours>();
+        }
+
+        public void AddDoctorWorkingHouse(DoctorWorkingHours doctorWorkingHour)
+        {
+            DynamicParameters param = new DynamicParameters();
+            param.Add("@DoctorId", doctorWorkingHour.DoctorId);
+            param.Add("@StartHour", doctorWorkingHour.StartHour);
+            param.Add("@EndHour", doctorWorkingHour.EndHour);
+            param.Add("@DayOfWeekId", doctorWorkingHour.IdDayOfWeek);
+            ExecuteWithoutReturn("AddDoctorWorkingHouse", param);
+        }
+
+        public void UpdateDoctorWorkingHourByDayOfWeekId(DoctorWorkingHours doctorWorkingHour)
+        {
+            DynamicParameters param = new DynamicParameters();
+            param.Add("@DoctorId", doctorWorkingHour.DoctorId);
+            param.Add("@StartHour", doctorWorkingHour.StartHour);
+            param.Add("@EndHour", doctorWorkingHour.EndHour);
+            param.Add("@DayOfWeekId", doctorWorkingHour.IdDayOfWeek);
+            ExecuteWithoutReturn("UpdateDoctorWorkingHourByDayOfWeekId", param);
         }
     }
 }
