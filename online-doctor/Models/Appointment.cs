@@ -27,6 +27,10 @@ namespace online_doctor.Models
         [DataType(DataType.PhoneNumber)]
         public string PhoneNumber { get; set; }
 
+        [Required]
+        [Display(Name = "Причина записи")]
+        public string ReasonAppointment { get; set; }
+
         public bool PayedFor { get; set; }
 
         public string ErrorMessage { get; set; }
