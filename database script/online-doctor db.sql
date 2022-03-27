@@ -70,6 +70,7 @@ create table Appointment(
     AppointedStart DateTime,
     AppointedEnd DateTime,
     PayedFor bit,
+    AppointmentReason text,
     foreign key (IdUser) references Users(UserId),
 	foreign key (IdDoctor) references Doctor(Doctorid),
     foreign key (IdType) references AppointmentType(TypeId)
@@ -230,10 +231,54 @@ CALL `onlinedoctor`.`UpdateDoctorInformation`();
 DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `GetAppoitmentTypes`()
 BEGIN
-	SELECT TypeId, AppointmentType as Type FROM AppointmentType;
+	SELECT TypeId, Appointment as Type FROM AppointmentType;
 END;
 
 CALL `onlinedoctor`.`GetAppoitmentTypes`();
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `GetDayOfWeeks`()
+BEGIN
+	SELECT * FROM DayOfWeek;
+END;
+
+CALL `onlinedoctor`.`GetDayOfWeeks`();
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `AddDoctorWorkingHouse`(DoctorId int(11), StartHour time, EndHour time, DayOfWeekId int(11))
+BEGIN
+	INSERT INTO `onlinedoctor`.`doctorworkinghours` (`DoctorId`, `StartHour`, `EndHour`, `DayOfWeekId`)
+	VALUES (DoctorId, StartHour, EndHour, DayOfWeekId);
+END;
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `GetDoctorWorkingHouse`(DoctorId int(11))
+BEGIN
+	SELECT * FROM DoctorWorkingHours WHERE DoctorWorkingHours.DoctorId = DoctorId;
+END;
+
+CALL `onlinedoctor`.`GetDoctorWorkingHouse`(1);
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `GetDoctorWorkingHouseByDayofWeekId`(DoctorId int(11), DayOfWeekId int(11))
+BEGIN
+	SELECT * FROM DoctorWorkingHours WHERE DoctorWorkingHours.DoctorId = DoctorId AND DoctorWorkingHours.DayOfWeekId = DayOfWeekId;
+END;
+
+CALL `onlinedoctor`.`GetDoctorWorkingHouseByDayofWeekId`(1, 1);
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `UpdateDoctorWorkingHourByDayOfWeekId`(DoctorId int(11), StartHour time, EndHour time, DayOfWeekId int(11))
+BEGIN
+	UPDATE DoctorWorkingHours 
+    SET DoctorWorkingHours.StartHour = StartHour,
+		DoctorWorkingHours.EndHour = EndHour
+    WHERE DoctorWorkingHours.DoctorId = DoctorId AND DoctorWorkingHours.DayOfWeekId = DayOfWeekId;
+END;
+
+CALL `onlinedoctor`.`UpdateDoctorWorkingHourByDayOfWeekId`(1, "09:00", "18:00", 1);
+
+SELECT * FROM DoctorWorkingHours;
 #
 
 
