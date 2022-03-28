@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using online_doctor.Models;
 using online_doctor.Repositories;
-using System;
 using System.Collections.Generic;
 
 namespace online_doctor.Controllers
@@ -12,7 +11,8 @@ namespace online_doctor.Controllers
     {
         private readonly DoctorRepository _doctorRepository;
         private readonly DoctorSpecializationRepository _doctorSpecializationRepository;
-        private readonly AppoitmentTypeRepository _appointmentType;
+        private readonly AppoitmentTypeRepository _appointmentTypeRepository;
+        private readonly AppointmentRepository _appointmentRepository;
 
         void loadDoctorSpecializations()
         {
@@ -31,11 +31,12 @@ namespace online_doctor.Controllers
             ViewBag.sortTypes = new SelectList(sortTypes, "Id", "Type");
         }
 
-        public HomeController(DoctorRepository doctorRepository, DoctorSpecializationRepository doctorSpecializationRepository, AppoitmentTypeRepository appointmentType)
+        public HomeController(DoctorRepository doctorRepository, DoctorSpecializationRepository doctorSpecializationRepository, AppoitmentTypeRepository appointmentType, AppointmentRepository appointmentRepository)
         {
             _doctorRepository = doctorRepository;
             _doctorSpecializationRepository = doctorSpecializationRepository;
-            _appointmentType = appointmentType;
+            _appointmentTypeRepository = appointmentType;
+            _appointmentRepository = appointmentRepository;
         }
 
         public IActionResult Index()
@@ -62,15 +63,12 @@ namespace online_doctor.Controllers
         [HttpGet]
         public IActionResult CreateAppoitment(int userID, int doctorID)
         {
-            List<AppointmentType> appointmentTypes = _appointmentType.GetAppoitmentTypes();
+            List<AppointmentType> appointmentTypes = _appointmentTypeRepository.GetAppoitmentTypes();
             ViewBag.AppoitmentType = new SelectList(appointmentTypes, "TypeId", "Type");
 
             Appointment appointment = new Appointment();
             appointment.IdDoctor = doctorID;
             appointment.IdUser = userID;
-
-            appointment.AvailableAppoitmentTimes.Add(new AppointmentTime { Id = 1, Time = new DateTime(2010, 10, 10, 15, 0, 0) });
-            appointment.AvailableAppoitmentTimes.Add(new AppointmentTime { Id = 1, Time = new DateTime(2025, 10, 10, 15, 0, 0) });
 
             return View(appointment);
         }
@@ -78,6 +76,10 @@ namespace online_doctor.Controllers
         [HttpPost]
         public IActionResult CreateAppoitment(Appointment appointment)
         {
+            // TODO validate appointment
+            appointment.AppointedEnd = appointment.AppointedStart.AddHours(1);
+            _appointmentRepository.AddAppointment(appointment);
+
             return RedirectToAction("Index", "Home");
         }
     }

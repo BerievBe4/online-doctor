@@ -5,7 +5,7 @@
 }
 
 <h2>Записаться на приём</h2>
-
+  
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -20,14 +20,19 @@
                 <span asp-validation-for="IdDoctor" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="AvailableAppoitmentTimes" class="control-label"></label>
-                <select asp-for="SelectedTime" asp-items="@(new SelectList(Model.AvailableAppoitmentTimes, "Id", "Time"))"></select>
-                <span asp-validation-for="AvailableAppoitmentTimes" class="text-danger"></span>
+                <label asp-for="AppointedStart" class="control-label"></label>
+                <input asp-for="AppointedStart" class="datepicker form-control" />
+                <span asp-validation-for="AppointedStart" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="PhoneNumber" class="control-label"></label>
                 <input asp-for="PhoneNumber" class="form-control" />
                 <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ReasonAppointment" class="control-label"></label>
+                <input asp-for="ReasonAppointment" class="form-control" />
+                <span asp-validation-for="ReasonAppointment" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="IdType" class="control-label"></label>
@@ -36,11 +41,6 @@
             </div>
             <div class="form-group">
                 <span class="field-validation-error" style="color:brown;">@Html.DisplayFor(model => Model.ErrorMessage)</span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ReasonAppointment" class="control-label"></label>
-                <input asp-for="ReasonAppointment" class="form-control" />
-                <span asp-validation-for="ReasonAppointment" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Записаться" class="btn btn-default" />
