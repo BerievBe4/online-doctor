@@ -40,6 +40,12 @@ namespace online_doctor.Controllers
             return View(appointments);
         }
 
+        public IActionResult AppointmentDetail(int appointmentId)
+        {
+            Appointment appointment = _appointmentRepository.GetAppointmentById(appointmentId);
+            return View(appointment);
+        }
+
         //[is doctor]
         [HttpGet]
         public IActionResult ChangeDoctorInformation(int doctorId)
@@ -93,21 +99,20 @@ namespace online_doctor.Controllers
         [HttpPost]
         public IActionResult ChangeDoctorShedule(DoctorWorkingHours doctorWorkingHours)
         {
-            DoctorWorkingHours existDoctorWorkingHours = _doctorRepository.GetDoctorWorkingHouseByDayofWeekId(doctorWorkingHours.DoctorId, doctorWorkingHours.IdDayOfWeek);
-            if (existDoctorWorkingHours.StartHour > existDoctorWorkingHours.EndHour)
+            if (doctorWorkingHours.StartHour > doctorWorkingHours.EndHour)
             {
-                existDoctorWorkingHours.ErrorMessage = "Неккоректное время";
-                return View("ChangeDoctorShedule", existDoctorWorkingHours);
+                doctorWorkingHours.ErrorMessage = "Неккоректное время";
+                return View("ChangeDoctorShedule", doctorWorkingHours);
             }
 
+            DoctorWorkingHours existDoctorWorkingHours = _doctorRepository.GetDoctorWorkingHouseByDayofWeekId(doctorWorkingHours.DoctorId, doctorWorkingHours.IdDayOfWeek);
             if (existDoctorWorkingHours != null)
             {
                 _doctorRepository.UpdateDoctorWorkingHourByDayOfWeekId(doctorWorkingHours);
-
                 return RedirectToAction("Index", "PersonalAccount");
             }
 
-            _doctorRepository.AddDoctorWorkingHouse(existDoctorWorkingHours);
+            _doctorRepository.AddDoctorWorkingHouse(doctorWorkingHours);
             return RedirectToAction("Index", "PersonalAccount");
         }
     }

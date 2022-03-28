@@ -36,5 +36,12 @@ namespace online_doctor.Repositories
             param.Add("@AppointedEnd", appointment.AppointedEnd);
             return ReturnList<Appointment>("GetAppointmentsByUserId", param).ToList<Appointment>();
         }
+
+        public Appointment GetAppointmentById(int AppointmentId)
+        {
+            DynamicParameters param = new DynamicParameters();
+            param.Add("@AppointmentId", AppointmentId);
+            return ReturnList<Appointment>("GetAppointmentById", param).FirstOrDefault<Appointment>();
+        }
     }
 }

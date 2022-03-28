@@ -55,7 +55,7 @@
                     @Html.DisplayFor(modelItem => item.PayedFor)
                 </td>
                 <td>
-                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }, new { @class = "btn btn-info" })
+                    @Html.ActionLink("Details", "AppointmentDetail", new { AppointmentId = item.AppointmentId }, new { @class = "btn btn-info" })
                 </td>
             </tr>
         }

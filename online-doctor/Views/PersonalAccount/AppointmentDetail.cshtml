@@ -1,0 +1,56 @@
+﻿@model online_doctor.Models.Appointment
+
+@{
+    ViewData["Title"] = "AppointmentDetail";
+}
+
+<h2>Детали записи</h2>
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.FIO)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.FIO)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.AppointmentType)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.AppointmentType)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.AppointedStart)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.AppointedStart)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.AppointedEnd)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.AppointedEnd)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ReasonAppointment)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ReasonAppointment)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.PayedFor)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PayedFor)
+        </dd>
+    </dl>
+    <a asp-action="Index" class="btn btn-info">Выгрузить в Excel</a>
+
+    @*If appointment haven't paid.*@
+    <a asp-action="Index" class="btn btn-info">Оплатить приём</a>
+</div>
+<div>
+    <a asp-action="Index" class="btn btn-default">Back to List</a>
+</div>
