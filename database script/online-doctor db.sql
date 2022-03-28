@@ -64,6 +64,7 @@ create table AppointmentType(
 ) AUTO_INCREMENT=1;
 
 create table Appointment(
+	AppointmentId int(11) NOT NULL AUTO_INCREMENT,
 	IdUser int(11),
 	IdDoctor int(11),
     IdType int(11),
@@ -73,8 +74,9 @@ create table Appointment(
     AppointmentReason text,
     foreign key (IdUser) references Users(UserId),
 	foreign key (IdDoctor) references Doctor(Doctorid),
-    foreign key (IdType) references AppointmentType(TypeId)
-);
+    foreign key (IdType) references AppointmentType(TypeId),
+    PRIMARY KEY (AppointmentId)
+) AUTO_INCREMENT=1;
 
 create table Comments(
 	CommentId int(11) NOT NULL AUTO_INCREMENT,
@@ -128,21 +130,6 @@ VALUES
 
 SELECT * FROM Users;
 UPDATE Users SET IdRole = 1 WHERE Users.UserId = 1;
-
-INSERT INTO `onlinedoctor`.`doctor`
-(`Login`,
-`DoctorPassword`,
-`FIO`,
-`Email`,
-`Photo`,
-`About`,
-`Education`,
-`Birthday`,
-`IdDocType`)
-VALUES
-("", "", "Test1","test@test.com","Kek","Keker","Keker","01.01.01",2),
-("", "", "Test2","test2@test.com","Kek","Keker","Keker","01.01.01",3),
-("", "", "Test2","test2@test.com","Kek","Keker","Keker","01.01.01",4);
 #
 
 # storage procedures
@@ -254,7 +241,7 @@ END;
 DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `GetDoctorWorkingHouse`(DoctorId int(11))
 BEGIN
-	SELECT * FROM DoctorWorkingHours WHERE DoctorWorkingHours.DoctorId = DoctorId;
+	SELECT DoctorId, StartHour, EndHour, Day FROM DoctorWorkingHours JOIN DayOfWeek ON DayOfWeek.DayOfWeekId = DoctorWorkingHours.DayOfWeekId WHERE DoctorWorkingHours.DoctorId = DoctorId;
 END;
 
 CALL `onlinedoctor`.`GetDoctorWorkingHouse`(1);
@@ -281,7 +268,7 @@ CALL `onlinedoctor`.`UpdateDoctorWorkingHourByDayOfWeekId`(1, "09:00", "18:00", 
 DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `GetAppointmentsByUserId`(UserId int(11))
 BEGIN
-	SELECT IdUser, FIO, Appointment as AppointmentType, AppointedStart, AppointedEnd FROM Appointment JOIN Doctor ON Appointment.IdDoctor = DoctorId JOIN AppointmentType ON Appointment.IdType = TypeId WHERE Appointment.IdUser = UserId;
+	SELECT AppointmentId, IdUser, FIO, Appointment as AppointmentType, AppointedStart, AppointedEnd FROM Appointment JOIN Doctor ON Appointment.IdDoctor = DoctorId JOIN AppointmentType ON Appointment.IdType = TypeId WHERE Appointment.IdUser = UserId;
 END;
 
 CALL `onlinedoctor`.`GetAppointmentsByUserId`(1);
@@ -289,7 +276,7 @@ CALL `onlinedoctor`.`GetAppointmentsByUserId`(1);
 DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `GetAppointmentsByDoctorId`(DoctorId int(11))
 BEGIN
-	SELECT IdUser, FIO, Appointment as AppointmentType, AppointedStart, AppointedEnd FROM Appointment JOIN Doctor ON Appointment.IdDoctor = DoctorId JOIN AppointmentType ON Appointment.IdType = TypeId WHERE Appointment.IdDoctor = DoctorId;
+	SELECT AppointmentId, IdUser, FIO, Appointment as AppointmentType, AppointedStart, AppointedEnd FROM Appointment JOIN Doctor ON Appointment.IdDoctor = DoctorId JOIN AppointmentType ON Appointment.IdType = TypeId WHERE Appointment.IdDoctor = DoctorId;
 END;
 
 CALL `onlinedoctor`.`GetAppointmentsByDoctorId`(1);
@@ -301,10 +288,18 @@ BEGIN
 	VALUES (UserId, DoctorId, TypeId, AppointedStart, AppointedEnd, 0);
 END;
 
-CALL `onlinedoctor`.`AddAppointment`(1, 1, 5, "01.01.01", "01.01.01");
-CALL `onlinedoctor`.`AddAppointment`(1, 2, 5, "01.01.01", "01.01.01");
+CALL `onlinedoctor`.`AddAppointment`(1, 1, 1, "01.01.01", "01.01.01");
+CALL `onlinedoctor`.`AddAppointment`(1, 2, 1, "01.01.01", "01.01.01");
 
-SELECT * FROM Appointment;
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `GetAppointmentById`(AppointmentId int(11))
+BEGIN
+	SELECT AppointmentId, IdUser, FIO, Appointment as AppointmentType, AppointedStart, AppointedEnd FROM Appointment JOIN Doctor ON Appointment.IdDoctor = DoctorId JOIN AppointmentType ON Appointment.IdType = TypeId WHERE Appointment.AppointmentId = AppointmentId;
+END;
+
+CALL `onlinedoctor`.`GetAppointmentById`(4);
+
+SELECT * FROM doctorWorkingHours;
 #
 
 
