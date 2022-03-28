@@ -31,6 +31,7 @@ namespace online_doctor.Models
         [Display(Name = "Образование")]
         public string Education { get; set; }
         [Display(Name = "Дата рождения")]
+        [DataType(DataType.Date)]
         public DateTime Birthday { get; set; }
 
         [Display(Name = "Рейтинг")]
