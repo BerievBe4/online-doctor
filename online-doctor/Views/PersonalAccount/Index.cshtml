@@ -1,4 +1,6 @@
-﻿@{
+﻿@model IEnumerable<online_doctor.Models.Appointment>
+
+@{
     ViewData["Title"] = "Index";
 }
 
@@ -11,3 +13,51 @@
 }
 
 @Html.ActionLink("База знаний", "ChangeDoctorShedule", "PersonalAccount", new { }, new { @class = "btn btn-success" })
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.FIO)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AppointmentType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AppointedStart)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AppointedEnd)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PayedFor)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FIO)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AppointmentType)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AppointedStart)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AppointedEnd)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PayedFor)
+                </td>
+                <td>
+                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }, new { @class = "btn btn-info" })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

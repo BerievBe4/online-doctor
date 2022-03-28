@@ -15,15 +15,17 @@ namespace online_doctor.Controllers
         private readonly DoctorRepository _doctorRepository;
         private readonly DoctorSpecializationRepository _doctorSpecializationRepository;
         private readonly DayOfWeekRepository _dayOfWeekRepository;
+        private readonly AppointmentRepository _appointmentRepository;
 
         private readonly IHostingEnvironment _hostingEnvironment;
 
-        public PersonalAccountController(UserRepository userRepository, DoctorRepository doctorRepository, DoctorSpecializationRepository doctorSpecializationRepository, DayOfWeekRepository dayOfWeekRepository, IHostingEnvironment hostingEnvironment)
+        public PersonalAccountController(UserRepository userRepository, DoctorRepository doctorRepository, DoctorSpecializationRepository doctorSpecializationRepository, DayOfWeekRepository dayOfWeekRepository, AppointmentRepository appointmentRepository, IHostingEnvironment hostingEnvironment)
         {
             _userRepository = userRepository;
             _doctorRepository = doctorRepository;
             _doctorSpecializationRepository = doctorSpecializationRepository;
             _dayOfWeekRepository = dayOfWeekRepository;
+            _appointmentRepository = appointmentRepository;
             _hostingEnvironment = hostingEnvironment;
         }
 
@@ -33,7 +35,9 @@ namespace online_doctor.Controllers
             ViewBag.UserID = HttpContext.Session.GetInt32("UserID");
             ViewBag.Login = HttpContext.Session.GetString("Login");
 
-            return View();
+            int UserId = (int)HttpContext.Session.GetInt32("UserID");
+            List<Appointment> appointments = _appointmentRepository.GetAppointmentsByUserId(UserId);
+            return View(appointments);
         }
 
         //[is doctor]

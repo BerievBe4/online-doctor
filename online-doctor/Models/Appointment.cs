@@ -13,14 +13,18 @@ namespace online_doctor.Models
         [Display(Name = "Тип приёма")]
         public int IdType { get; set; }
 
-        [Required]
-        [Display(Name = "Дата и время приёма")]
-        public DateTime AppointedStart { get; set; }
-        public DateTime AppointedEnd { get; set; }
+        [Display(Name = "Доктор")]
+        public string FIO { get; set; }
+        [Display(Name = "Тип приёма")]
+        public string AppointmentType { get; set; }
 
-        [Display(Name = "Доступное время")]
-        public List<AppointmentTime> AvailableAppoitmentTimes { get; set; } = new List<AppointmentTime>();
-        public int SelectedTime { get; set; }
+        [Required]
+        [DataType(DataType.DateTime)]
+        [Display(Name = "Начало приёма приёма")]
+        public DateTime AppointedStart { get; set; }
+        [DataType(DataType.DateTime)]
+        [Display(Name = "Окончание приёма")]
+        public DateTime AppointedEnd { get; set; }
 
         [Required]
         [Display(Name = "Номер телефона для связи")]
@@ -31,6 +35,7 @@ namespace online_doctor.Models
         [Display(Name = "Причина записи")]
         public string ReasonAppointment { get; set; }
 
+        [Display(Name = "Оплачено")]
         public bool PayedFor { get; set; }
 
         public string ErrorMessage { get; set; }
