@@ -6,6 +6,8 @@ namespace online_doctor.Models
 {
     public class Appointment
     {
+        public int AppointmentId { get; set; }
+
         public int IdUser { get; set; }
         public int IdDoctor { get; set; }
 
@@ -20,7 +22,7 @@ namespace online_doctor.Models
 
         [Required]
         [DataType(DataType.DateTime)]
-        [Display(Name = "Начало приёма приёма")]
+        [Display(Name = "Начало приёма")]
         public DateTime AppointedStart { get; set; }
         [DataType(DataType.DateTime)]
         [Display(Name = "Окончание приёма")]
