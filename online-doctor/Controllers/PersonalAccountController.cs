@@ -67,13 +67,13 @@ namespace online_doctor.Controllers
                 worksheet.Range["A1"].CellStyle.Font.Bold = true;
                 worksheet.Range["A1"].Text = "The Best Doctor";
 
-                worksheet.Range["A1:B8"].BorderAround();
-                worksheet.Range["A2"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thick;
-                worksheet.Range["A3"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thick;
-                worksheet.Range["A4"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thick;
-                worksheet.Range["A5"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thick;
-                worksheet.Range["A6"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thick;
-                worksheet.Range["A7"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thick;
+                worksheet.Range["A1:B7"].BorderAround();
+                worksheet.Range["A2"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+                worksheet.Range["A3"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+                worksheet.Range["A4"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+                worksheet.Range["A5"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+                worksheet.Range["A6"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
+                worksheet.Range["A7"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thin;
 
                 worksheet.Range["A2"].Text = "Доктор:";
                 worksheet.Range["A3"].Text = "Тип записи:";
