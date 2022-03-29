@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using online_doctor.Models;
 using online_doctor.Repositories;
+using Syncfusion.XlsIO;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -44,6 +45,64 @@ namespace online_doctor.Controllers
         {
             Appointment appointment = _appointmentRepository.GetAppointmentById(appointmentId);
             return View(appointment);
+        }
+
+        public IActionResult GetAppointmentDetailsInExcel(int appointmentId)
+        {
+            Appointment appointment = _appointmentRepository.GetAppointmentById(appointmentId);
+
+            using (ExcelEngine excelEngine = new ExcelEngine())
+            {
+                IApplication application = excelEngine.Excel;
+                application.DefaultVersion = ExcelVersion.Excel2007;
+
+                // Create a workbook
+                IWorkbook workbook = application.Workbooks.Create(1);
+                IWorksheet worksheet = workbook.Worksheets[0];
+
+                // Data
+                worksheet.Range["A1:B1"].Merge();
+                worksheet.Range["A1:B1"].VerticalAlignment = ExcelVAlign.VAlignCenter;
+                worksheet.Range["A1:B1"].HorizontalAlignment = ExcelHAlign.HAlignCenter;
+                worksheet.Range["A1"].CellStyle.Font.Bold = true;
+                worksheet.Range["A1"].Text = "The Best Doctor";
+
+                worksheet.Range["A1:B8"].BorderAround();
+                worksheet.Range["A2"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thick;
+                worksheet.Range["A3"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thick;
+                worksheet.Range["A4"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thick;
+                worksheet.Range["A5"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thick;
+                worksheet.Range["A6"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thick;
+                worksheet.Range["A7"].CellStyle.Borders[ExcelBordersIndex.EdgeRight].LineStyle = ExcelLineStyle.Thick;
+
+                worksheet.Range["A2"].Text = "Доктор:";
+                worksheet.Range["A3"].Text = "Тип записи:";
+                worksheet.Range["A4"].Text = "Причина записи:";
+                worksheet.Range["A5"].Text = "Начало приёма:";
+                worksheet.Range["A6"].Text = "Окончание приёма:";
+                worksheet.Range["A7"].Text = "Оплачено:";
+
+                worksheet.Range["B2"].Text = appointment.FIO;
+                worksheet.Range["B3"].Text = appointment.AppointmentType;
+                worksheet.Range["B4"].Text = appointment.ReasonAppointment;
+                worksheet.Range["B5"].Text = appointment.AppointedStart.ToString();
+                worksheet.Range["B6"].Text = appointment.AppointedEnd.ToString();
+                worksheet.Range["B7"].Text = appointment.PayedFor.ToString();
+
+                //Fit column width to data
+                worksheet.UsedRange.AutofitColumns();
+
+                // Save the Excel workbook in MemoryStream
+                MemoryStream stream = new MemoryStream();
+
+                workbook.SaveAs(stream);
+
+                stream.Position = 0;
+
+                FileStreamResult fileStreamResult = new FileStreamResult(stream, "application/excel");
+                fileStreamResult.FileDownloadName = "Output.xlsx";
+                return fileStreamResult;
+            }
         }
 
         //[is doctor]

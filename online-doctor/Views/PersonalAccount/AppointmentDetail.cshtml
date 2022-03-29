@@ -46,10 +46,19 @@
             @Html.DisplayFor(model => model.PayedFor)
         </dd>
     </dl>
-    <a asp-action="Index" class="btn btn-info">Выгрузить в Excel</a>
+
+    @Html.ActionLink("Выгрузить в Excel", "GetAppointmentDetailsInExcel", new { appointmentId = Model.AppointmentId }, new { @class = "btn btn-info" })
 
     @*If appointment haven't paid.*@
-    <a asp-action="Index" class="btn btn-info">Оплатить приём</a>
+    @if (ViewBag.RoleID == 2)
+    {
+        <a asp-action="Index" class="btn btn-info">Оплатить приём</a>
+    }
+
+    @if (ViewBag.RoleID == 3)
+    {
+        <a asp-action="Index" class="btn btn-info">Добавить ссылку</a>
+    }
 </div>
 <div>
     <a asp-action="Index" class="btn btn-default">Back to List</a>
