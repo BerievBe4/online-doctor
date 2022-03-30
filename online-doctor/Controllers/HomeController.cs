@@ -17,9 +17,10 @@ namespace online_doctor.Controllers
         void loadDoctorSpecializations()
         {
             List<DoctorSpecialization> doctorSpecializations = _doctorSpecializationRepository.GetDoctorSpecializations();
+            doctorSpecializations.RemoveAt(0);
             doctorSpecializations.Insert(0, new DoctorSpecialization { DocTypeId = 0, DoctorType = "-" });
 
-            ViewBag.doctorSpecializations = new SelectList(doctorSpecializations, "Id", "DoctorType");
+            ViewBag.doctorSpecializations = new SelectList(doctorSpecializations, "DocTypeId", "DoctorType");
         }
         void loadSortTypes()
         {
@@ -50,6 +51,33 @@ namespace online_doctor.Controllers
             return View(doctors);
         }
 
+        public IActionResult EvaluateDoctor(int rating, int DoctorId)
+        {
+            int userId = (int)HttpContext.Session.GetInt32("UserID");
+            _doctorRepository.SetDoctorRating(userId, DoctorId, rating);
+
+            loadDoctorSpecializations();
+            loadSortTypes();
+
+            ViewBag.RoleID = HttpContext.Session.GetInt32("RoleID");
+            List<Doctor> doctors = _doctorRepository.GetAllDoctors();
+
+            return View("Index", doctors);
+        }
+
+        public IActionResult SortDoctor(int doctorTypeId, int sortTypeId)
+        {
+            loadDoctorSpecializations();
+            loadSortTypes();
+
+            List<Doctor> doctors = _doctorRepository.GetAllDoctors();
+
+            if (doctorTypeId == 0 && sortTypeId == 0)
+                return View("Index", doctors);
+
+            return View("Index", doctors);
+        }
+
         public IActionResult More(int doctorId)
         {
             ViewBag.RoleID = HttpContext.Session.GetInt32("RoleID");
@@ -57,6 +85,11 @@ namespace online_doctor.Controllers
 
             Doctor doctor = _doctorRepository.GetDoctorById(doctorId);
             doctor.DoctorWorkingHours = _doctorRepository.GetDoctorWorkingHours(doctorId);
+
+            int? userId = (int?)HttpContext.Session.GetInt32("UserID");
+            if (userId != null)
+                ViewBag.Rating = _doctorRepository.GetDoctorRatingByUserIdAndDoctorId((int)userId, doctorId);
+
             return View(doctor);
         }
 

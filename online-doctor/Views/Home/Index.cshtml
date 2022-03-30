@@ -4,13 +4,16 @@
     ViewData["Title"] = "Index";
 }
 
-@*@Html.DropDownList("DocTypeId", ViewBag.doctorSpecializations as SelectList)
-@Html.DropDownList("IDocTypeId", ViewBag.sortTypes as SelectList)
-@Html.ActionLink("Apply", "SortDoctors", "Index", new { }, new { @class = "btn btn-success" })*@
+@using (Html.BeginForm("SortDoctor", "Home"))
+{
+    @Html.DropDownList("doctorTypeId", ViewBag.doctorSpecializations as SelectList)
+    @Html.DropDownList("sortTypeId", ViewBag.sortTypes as SelectList)
+    <input type="submit" value="Отправить" />
+}
 
 @if (ViewBag.RoleID == 1)
 {
-@Html.ActionLink("Admin panel", "Index", "Admin", new { }, new { @class = "btn btn-success" })
+    @Html.ActionLink("Admin panel", "Index", "Admin", new { }, new { @class = "btn btn-success" })
 }
 
 <table class="table">
@@ -39,7 +42,7 @@
                     @Html.DisplayFor(modelItem => item.DoctorType)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Rating)
+                    @Html.DisplayFor(modelItem => item.Rating) / 5
                 </td>
                 <td>
                     @Html.ActionLink("More", "More", "Home", new { doctorId = item.DoctorId }, new { @class = "btn btn-info" })

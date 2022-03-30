@@ -22,6 +22,36 @@ namespace online_doctor.Repositories
             return doctors;
         }
 
+        public List<Doctor> GetAllDoctorsByType(int doctorTypeId)
+        {
+            DynamicParameters param = new DynamicParameters();
+            param.Add("@DoctorTypeId", doctorTypeId);
+            List<Doctor> doctors = ReturnList<Doctor>("GetAllDoctorsByType", param).ToList<Doctor>();
+            foreach (var doctor in doctors)
+                doctor.Rating = doctor.Rating == null ? 0.0f : doctor.Rating;
+
+            return doctors;
+        }
+
+        public float? GetDoctorRatingByUserIdAndDoctorId(int userId, int doctorId)
+        {
+            DynamicParameters param = new DynamicParameters();
+            param.Add("@UserId", userId);
+            param.Add("@DoctorId", doctorId);
+            DoctorRating doctorRating = ReturnList<DoctorRating>("GetDoctorRatingByUserIdAndDoctorId", param).FirstOrDefault<DoctorRating>();
+
+            return (doctorRating != null ? doctorRating.Rating : null);
+        }
+
+        public void SetDoctorRating(int userId, int doctorId, float rating)
+        {
+            DynamicParameters param = new DynamicParameters();
+            param.Add("@UserId", userId);
+            param.Add("@DoctorId", doctorId);
+            param.Add("@Raing", rating);
+            ExecuteWithoutReturn("SetDoctorRating", param);
+        }
+
         public void RegistrationDoctor(Doctor doctor)
         {
             DynamicParameters param = new DynamicParameters();
