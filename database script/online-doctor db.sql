@@ -136,7 +136,7 @@ UPDATE Users SET IdRole = 1 WHERE Users.UserId = 1;
 DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `GetAllDoctors`()
 BEGIN
-	select * from doctor left join ( select IdDoctor, avg(Rating) as stars from ratings group by IdDoctor order by stars asc)a on a.IdDoctor = DoctorId join (select * from DoctorType)b on b.DocTypeId = IdDocType;
+	select * from doctor left join ( select IdDoctor, avg(Rating) as Rating from ratings group by IdDoctor order by Rating asc)a on a.IdDoctor = DoctorId join (select * from DoctorType)b on b.DocTypeId = IdDocType;
 END;
 
 CALL `onlinedoctor`.`GetAllDoctors`();
@@ -178,7 +178,7 @@ CALL `onlinedoctor`.`GetUserByLogin`("123");
 DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `GetDoctorById`(DoctorId int)
 BEGIN
-	SELECT * FROM doctor WHERE doctor.DoctorId = doctorId;
+	SELECT FIO, About, Education, Rating, Photo FROM Doctor JOIN Ratings ON Ratings.IdDoctor = Doctor.DoctorId WHERE doctor.DoctorId = DoctorId;
 END;
 
 CALL `onlinedoctor`.`GetDoctorById`(5);
@@ -299,7 +299,45 @@ END;
 
 CALL `onlinedoctor`.`GetAppointmentById`(4);
 
-SELECT * FROM doctorWorkingHours;
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `GetAllDoctorsByType`(DoctorTypeId int(11))
+BEGIN
+	SELECT * FROM Doctor JOIN DoctorType ON Doctor.IdDocType = DoctorType.DocTypeId WHERE Doctor.IdDocType = DoctorTypeId;
+END;
+
+CALL `onlinedoctor`.`GetAllDoctorsByType`(2);
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `GetDoctorRatingByUserIdAndDoctorId`(UserId int(11), DoctorId int(11))
+BEGIN
+	SELECT * FROM Ratings WHERE Ratings.IdUser = UserId AND Ratings.IdDoctor = DoctorId;
+END;
+
+CALL `onlinedoctor`.`GetDoctorRatingByUserIdAndDoctorId`(1, 1);
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SetDoctorRating`(UserId int(11), DoctorId int(11), Raing float)
+BEGIN
+	INSERT INTO `onlinedoctor`.`ratings` (`IdUser`, `IdDoctor`, `Rating`) VALUES (UserId, DoctorId, Raing);
+END;
+
+CALL `onlinedoctor`.`SetDoctorRating`(1, 1, 5);
+
+
+
+
+
+
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `GetAllDoctorsByRating`(IsAscSort bit)
+BEGIN
+	IF IsAscSort = 0 THEN
+		SELECT * FROM Doctor JOIN DoctorType ON Doctor.IdDocType = DoctorType.DocTypeId WHERE Doctor.IdDocType = DoctorTypeId;
+    ELSE
+		SELECT * FROM Doctor JOIN DoctorType ON Doctor.IdDocType = DoctorType.DocTypeId WHERE Doctor.IdDocType = DoctorTypeId;
+    END IF;
+END;
 #
 
 
@@ -374,111 +412,3 @@ BEGIN
 END;
 
 CALL `onlinedoctor`.`DeleteDoctorById`(3);
-
-DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `GetAppointmentsByUserId`(Id int)
-BEGIN
-	select * from Appointment where IDUser = Id;
-END;
-
-DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `Login`(Login varchar(255), UserPassword text)
-BEGIN
-	select UserId from users where users.Login = Login && users.UserPassword = UserPassword;
-END;
-
-DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `GetDoctorsByType`(Id int)
-BEGIN
-	select * from doctor where IdDocType = Id;
-END;
-
-CALL `onlinedoctor`.`GetDoctorsByType`(1);
-
-DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `AddAppointment`(DocId int,UserId int, TypeId int, AppointedStart dateTime, AppointedEnd dateTime)
-BEGIN
-	INSERT INTO `onlinedoctor`.`appointment`
-(`IdUser`,
-`IdDoctor`,
-`IdType`,
-`AppointedStart`,
-`AppointedEnd`)
-VALUES
-(DocId, userId, TypeId, AppointedStart, AppointedEnd);
-END;
-
-CALL `onlinedoctor`.`AddAppointment`(1, 1, 1, "01.01.01", "01.01.01");
-
-DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `RegisterOrEditUser`(
-	Id int(11),
-	FIO varchar(50),
-    Email varchar(50),
-    Birthday Date,
-    Login varchar(255),
-    UserPassword text,
-    IdRole int(11))
-BEGIN
-IF Id = 0 THEN
-INSERT INTO `onlinedoctor`.`users`
-(`FIO`,
-`Email`,
-`Birthday`,
-`Login`,
-`UserPassword`,
-`IdRole`)
-VALUES
-(FIo, Email, Birthday, Login, UserPassword, IdRole);
-ELSE
-		UPDATE Users
-		SET
-        Users.FIO = FIO,
-        Users.Email = Email,
-        Users.UserPassword = UserPassword,
-        Users.Login = Login,
-        Users.Birthday = Birthday,
-        Users.IdRole = IdRole
-		WHERE UserId = Id;
-	END IF;
-END;
-
-CALL `onlinedoctor`.`RegisterOrEditUser`(1,"Sex", "Sex","01.01.01.", "Sex", "Sex", 1);
-
-DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `AddOrEditDoctor`(
-	Id int(11),
-	FIO varchar(50),
-    Email varchar(50),
-    Photo text,
-    About text,
-    Education varchar(255),
-    Birthday Date,
-    IdDocType int(11))
-BEGIN
-IF Id = 0 THEN
-INSERT INTO `onlinedoctor`.`doctor`
-(`FIO`,
-`Email`,
-`Photo`,
-`About`,
-`Education`,
-`Birthday`,
-`IdDocType`)
-VALUES
-(FIO, Email, Photo, About, Education, Birthday, IdDocType);
-ELSE
-		UPDATE Doctor
-		SET
-        Doctor.FIO = FIO,
-        Doctor.Email = Email,
-        Doctor.Photo = Photo,
-        Doctor.About = About,
-        Doctor.Education = Education,
-        Doctor.Birthday = Birthday,
-        Doctor.IdDocType = IdDocType
-		WHERE DoctorId = Id;
-	END IF;
-END;
-
-CALL `onlinedoctor`.`AddOrEditDoctor`(1, "Sex", "Sex", "Sex", "Sex", "Sex", "01.01.01.", 1);
