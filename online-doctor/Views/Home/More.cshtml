@@ -40,43 +40,59 @@
                 @Html.ActionLink("Записаться", "CreateAppoitment", "Home", new { userID = ViewBag.UserID, doctorID = Model.DoctorId }, new { @class = "btn btn-success" })
 
                 @* Оценка доктора *@
-            if (ViewBag.Rating == null)
-            {
-            <nav>
-                @using (Html.BeginForm("EvaluateDoctor", "Home"))
+                if (ViewBag.Rating == null)
                 {
-                <ul class="list-group list-group-horizontal">
-                    <div class="form-group">
-                        <input type="hidden" asp-for="DoctorId" class="form-control" />
-                        <span asp-validation-for="DoctorId" class="text-danger"></span>
-                    </div>
-                    @for (int ratingId = 1; ratingId <= 4; ++ratingId)
-                    {
-                        <li class="list-group-item">
-                            <div class="form-check form-check-inline">
-                                @Html.RadioButton("rating", ratingId, false, new { @rating = ratingId })
-                                <label class="form-check-label">@ratingId.ToString()</label>
-                            </div>
-                        </li>
-                    }
-                    <li class="list-group-item">
-                        <div class="form-check form-check-inline">
-                            @Html.RadioButton("rating", 5, true, new { @rating = 5 })
-                            <label class="form-check-label">5</label>
-                        </div>
-                    </li>
-                    <li class="list-group-item">
-                        <input type="submit" value="Отправить" class="btn btn-success" />
-                    </li>
-                </ul>
+                    <nav>
+                        @using (Html.BeginForm("EvaluateDoctor", "Home"))
+                        {
+                            <ul class="list-group list-group-horizontal">
+                                <div class="form-group">
+                                    <input type="hidden" asp-for="DoctorId" class="form-control" />
+                                    <span asp-validation-for="DoctorId" class="text-danger"></span>
+                                </div>
+                                @for (int ratingId = 1; ratingId <= 4; ++ratingId)
+                                {
+                                    <li class="list-group-item">
+                                        <div class="form-check form-check-inline">
+                                            @Html.RadioButton("rating", ratingId, false, new { @rating = ratingId })
+                                            <label class="form-check-label">@ratingId.ToString()</label>
+                                        </div>
+                                    </li>
+                                }
+                                <li class="list-group-item">
+                                    <div class="form-check form-check-inline">
+                                        @Html.RadioButton("rating", 5, true, new { @rating = 5 })
+                                        <label class="form-check-label">5</label>
+                                    </div>
+                                </li>
+                                <li class="list-group-item">
+                                    <input type="submit" value="Отправить" class="btn btn-success" />
+                                </li>
+                            </ul>
+                        }
+                    </nav>
                 }
-            </nav>
             }
-            else
-            {
-                <p>Рейтинг: @Model.Rating /5</p>
-            }
-            }
+
+            <div class="row">
+                <div class="col-12"><h5>Комментарии:</h5></div>
+                <div class="col" id="commentContent">
+                    @Html.Partial("~/Views/Comment/PostComment.cshtml", ViewBag.Comments as List<Comment>)
+                </div>
+            </div>
+
+            <div class="row flex-column mb-5">
+                <div class="col">
+                    <textarea class="form-control comment-field mb-2" name="text" placeholder="Оставьте свой комментарий здесь" id="txtComment"></textarea>
+                </div>
+                <div class="col">
+                    <button type="button" onclick="postComment(@(ViewBag.UserID == null ? 1 : ViewBag.UserID), @Model.DoctorId)" id="sendButton" class="btn btn-primary comment-post">
+                        <i class="fas fa-paper-plane"></i>
+                        Оставить комментарий
+                    </button>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>

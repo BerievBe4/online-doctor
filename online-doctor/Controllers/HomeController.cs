@@ -13,6 +13,7 @@ namespace online_doctor.Controllers
         private readonly DoctorSpecializationRepository _doctorSpecializationRepository;
         private readonly AppoitmentTypeRepository _appointmentTypeRepository;
         private readonly AppointmentRepository _appointmentRepository;
+        private readonly CommentRepository _commentRepository;
 
         void loadDoctorSpecializations()
         {
@@ -32,12 +33,13 @@ namespace online_doctor.Controllers
             ViewBag.sortTypes = new SelectList(sortTypes, "Id", "Type");
         }
 
-        public HomeController(DoctorRepository doctorRepository, DoctorSpecializationRepository doctorSpecializationRepository, AppoitmentTypeRepository appointmentType, AppointmentRepository appointmentRepository)
+        public HomeController(DoctorRepository doctorRepository, DoctorSpecializationRepository doctorSpecializationRepository, AppoitmentTypeRepository appointmentType, AppointmentRepository appointmentRepository, CommentRepository commentRepository)
         {
             _doctorRepository = doctorRepository;
             _doctorSpecializationRepository = doctorSpecializationRepository;
             _appointmentTypeRepository = appointmentType;
             _appointmentRepository = appointmentRepository;
+            _commentRepository = commentRepository;
         }
 
         public IActionResult Index()
@@ -96,6 +98,8 @@ namespace online_doctor.Controllers
 
             if (userId != null)
                 ViewBag.Rating = _doctorRepository.GetDoctorRatingByUserIdAndDoctorId((int)userId, doctorId);
+
+            ViewBag.Comments = _commentRepository.GetCommentsByDoctorId(doctorId);
 
             return View(doctor);
         }

@@ -1,0 +1,21 @@
+﻿@model IEnumerable<online_doctor.Models.Comment>
+
+<div class="col" id="commentContent">
+    @if (Model != null)
+    {
+        @foreach (var item in Model)
+        {
+            <div class="row mb-3 comment">
+                <div class="col-6">
+                    <b>@item.UserName</b>
+                    <span class="text-muted">
+                        <i class="far fa-clock"></i>
+                        @item.PostedDate
+                    </span>
+                </div>
+                <div class="w-100"></div>
+                <div class="col-11">@item.CommentText</div>
+            </div>
+        }
+    }
+</div>

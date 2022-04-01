@@ -83,6 +83,7 @@ create table Comments(
 	CommentText varchar(255),
     IdUser int(11),
 	IdDoctor int(11),
+    PostedDate datetime,
 	foreign key (IdUser) references Users(UserId),
 	foreign key (IdDoctor) references Doctor(Doctorid),
 	PRIMARY KEY (CommentId)
@@ -453,101 +454,17 @@ BEGIN
     VALUES (ArticleName, ArticleText, Authors, 0, SubsectionId);
 END;
 
-SELECT * FROM Article;
-#
-
-
-create table Section(
-	SectionId int(11) NOT NULL AUTO_INCREMENT,
-	SectionName varchar(255),
-	PRIMARY KEY (SectionId)
-) AUTO_INCREMENT=1;
-
-create table Subsection(
-	SubsectionId int(11) NOT NULL AUTO_INCREMENT,
-	SubsectionName varchar(255),
-	IdSection int(11),
-	foreign key (IdSection) references Section(SectionId),
-	PRIMARY KEY (SubsectionId)
-) AUTO_INCREMENT=1;
-
-create table Article(
-	ArticleId int(11) NOT NULL AUTO_INCREMENT,
-	ArticleName varchar(255),
-	ArticleText text,
-	Authors varchar(255),
-	Approved bit,
-	IdSubsection int(11),
-	foreign key (IdSubsection) references Subsection(SubsectionId),
-	PRIMARY KEY (ArticleId)
-) AUTO_INCREMENT=1;
-
-
-INSERT INTO `onlinedoctor`.`ratings`
-(`IdUser`,
-`IdDoctor`,
-`Rating`)
-VALUES
-(1,1,1),
-(2,1,1),
-(3,1,1),
-(1,2,2),
-(2,2,2),
-(3,2,2);
-
 DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `GetStarsForDoctor`(Id int)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `AddComment`(IdUser int(11), IdDoctor int(11), CommentContent varchar(255))
 BEGIN
-	select * from doctor join ( select IdDoctor, avg(Rating) as stars from ratings where IdDoctor = Id  group by IdDoctor order by stars asc)a on a.IdDoctor = DoctorId;
+	INSERT INTO `onlinedoctor`.`comments` (`CommentText`, `IdUser`, `IdDoctor`)
+	VALUES (CommentContent, IdUser, IdDoctor);
 END;
 
-CALL `onlinedoctor`.`GetStarsForDoctor`(1);
-
-INSERT INTO `onlinedoctor`.`comments`
-(`CommentText`,
-`IdUser`,
-`IdDoctor`)
-VALUES
-("Соси сам один",1,2);
-
 DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `GetCommentsForDoctor`(Id int)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `GetCommentsByDoctorId`(DoctorId int(11))
 BEGIN
-	select * from comments where IdDoctor = Id;
+	SELECT * FROM Comments WHERE Comments.IdDoctor = DoctorId;
 END;
 
-CALL `onlinedoctor`.`GetCommentsForDoctor`(2);
-
-DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `AddComment`(DocId int,UserId int, CommentText varchar(255))
-BEGIN
-	INSERT INTO `onlinedoctor`.`comments`
-(`CommentText`,
-`IdUser`,
-`IdDoctor`)
-VALUES
-(CommentText, UserId, DocId);
-END;
-
-CALL `onlinedoctor`.`AddComment`(2, 1, "Rabotayet ebatb");
-
-DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `AddRating`(DocId int,UserId int, Rating int(11))
-BEGIN
-	INSERT INTO `onlinedoctor`.`ratings`
-(`IdUser`,
-`IdDoctor`,
-`Rating`)
-VALUES
-(UserId, DocId, Rating);
-END;
-
-CALL `onlinedoctor`.`AddRating`(1,1,5);
-
-DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `DeleteDoctorById`(Id int)
-BEGIN
-	delete from doctor where DoctorId = Id;
-END;
-
-CALL `onlinedoctor`.`DeleteDoctorById`(3);
+CALL `onlinedoctor`.`GetCommentsByDoctorId`(3);
