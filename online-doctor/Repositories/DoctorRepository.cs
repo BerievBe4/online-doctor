@@ -33,6 +33,29 @@ namespace online_doctor.Repositories
             return doctors;
         }
 
+        public List<Doctor> GetAllDoctorsByRating(bool isAscendingSort)
+        {
+            DynamicParameters param = new DynamicParameters();
+            param.Add("@IsAscSort", isAscendingSort);
+            List<Doctor> doctors = ReturnList<Doctor>("GetAllDoctorsByRating", param).ToList<Doctor>();
+            foreach (var doctor in doctors)
+                doctor.Rating = doctor.Rating == null ? 0.0f : doctor.Rating;
+
+            return doctors;
+        }
+
+        public List<Doctor> GetAllDoctorInfoSortingByRatingAndType(int doctorTypeId, bool isAscendingSort)
+        {
+            DynamicParameters param = new DynamicParameters();
+            param.Add("@DocTypeId", doctorTypeId);
+            param.Add("@IsAscSort", isAscendingSort);
+            List<Doctor> doctors = ReturnList<Doctor>("GetAllDoctorInfoSortingByRatingAndType", param).ToList<Doctor>();
+            foreach (var doctor in doctors)
+                doctor.Rating = doctor.Rating == null ? 0.0f : doctor.Rating;
+
+            return doctors;
+        }
+
         public float? GetDoctorRatingByUserIdAndDoctorId(int userId, int doctorId)
         {
             DynamicParameters param = new DynamicParameters();
