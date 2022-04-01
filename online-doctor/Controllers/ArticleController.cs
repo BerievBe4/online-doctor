@@ -37,7 +37,7 @@ namespace online_doctor.Controllers
             return View(subsections);
         }
 
-        [IsAuthorizedAdmin]
+        [IsAuthorizedUser]
         public IActionResult Articles(int subsectionId)
         {
             List<Article> articles = _articleRepository.GetAllArticlesBySubsectionId(subsectionId);

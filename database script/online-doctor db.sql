@@ -180,6 +180,23 @@ END;
 CALL `onlinedoctor`.`GetAllDoctorTypes`();
 
 DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `GetDoctorSpecializationsByName`(DoctorSpecializations varchar(255))
+BEGIN
+	select * from doctortype WHERE doctortype.doctortype = DoctorSpecializations;
+END;
+
+CALL `onlinedoctor`.`GetDoctorSpecializationsByName`("Ухо");
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `AddDoctorSpecialization`(DoctorSpecializations varchar(255))
+BEGIN
+	INSERT INTO `onlinedoctor`.`doctortype` (`DoctorType`) 
+    VALUES(DoctorSpecializations);
+END;
+
+CALL `onlinedoctor`.`GetDoctorSpecializationsByName`("Ухо");
+
+DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `RegistrationUser`(FIO varchar(255), Email varchar(255), Birthday date, Login varchar(255), UserPassword varchar(255))
 BEGIN
 	INSERT INTO `onlinedoctor`.`users` (`FIO`, `Email`, `Birthday`, `Login`, `UserPassword`, `IdRole`) 
@@ -320,6 +337,7 @@ BEGIN
 	SELECT AppointmentId, IdUser, FIO, Appointment as AppointmentType, AppointedStart, AppointedEnd, PayedFor FROM Appointment JOIN Doctor ON Appointment.IdDoctor = DoctorId JOIN AppointmentType ON Appointment.IdType = TypeId WHERE Appointment.IdDoctor = DoctorId;
 END;
 
+SELECT * FROM Appointment;
 CALL `onlinedoctor`.`GetAppointmentsByDoctorId`(3);
 
 DELIMITER $$
@@ -386,9 +404,9 @@ DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `GetAllDoctorInfoSortingByRatingAndType`(DocTypeId int(11), IsAscSort bit)
 BEGIN
 	IF IsAscSort = 0 THEN
-		select * from doctor left join ( select IdDoctor, avg(Rating) as Rating from ratings group by IdDoctor order by Rating asc)a on a.IdDoctor = DoctorId join (select * from DoctorType where DoctorType.DocTypeId = DocTypeId)b on b.DocTypeId = IdDocType order by Rating desc;
+		select DoctorId, Login, DoctorPassword, FIO, Email, Photo, About, Education, Birthday, IdDocType, IdDoctor, Rating, DocTypeId, DoctorType from doctor left join ( select IdDoctor, avg(Rating) as Rating from ratings group by IdDoctor order by Rating asc)a on a.IdDoctor = DoctorId join (select * from DoctorType where DoctorType.DocTypeId = DocTypeId)b on b.DocTypeId = IdDocType order by Rating desc;
 	ELSE
-		select * from doctor left join ( select IdDoctor, avg(Rating) as Rating from ratings group by IdDoctor order by Rating asc)a on a.IdDoctor = DoctorId join (select * from DoctorType where DoctorType.DocTypeId = DocTypeId)b on b.DocTypeId = IdDocType order by Rating asc;
+		select DoctorId, Login, DoctorPassword, FIO, Email, Photo, About, Education, Birthday, IdDocType, IdDoctor, Rating, DocTypeId, DoctorType from doctor left join ( select IdDoctor, avg(Rating) as Rating from ratings group by IdDoctor order by Rating asc)a on a.IdDoctor = DoctorId join (select * from DoctorType where DoctorType.DocTypeId = DocTypeId)b on b.DocTypeId = IdDocType order by Rating asc;
 	END IF;
 END;
 

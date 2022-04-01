@@ -1,0 +1,32 @@
+﻿@model online_doctor.Models.DoctorSpecialization
+
+@{
+    ViewData["Title"] = "AddDoctorSpecialization";
+}
+
+<h2>Добавить специализацию</h2>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="AddDoctorSpecialization">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="DoctorType" class="control-label"></label>
+                <input asp-for="DoctorType" class="form-control" />
+                <span asp-validation-for="DoctorType" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <span class="field-validation-error" style="color:brown;">@Html.DisplayFor(model => Model.ErrorMessage)</span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Добавить специализацию" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

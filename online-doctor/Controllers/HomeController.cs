@@ -80,10 +80,12 @@ namespace online_doctor.Controllers
 
             if (doctorTypeId != 0 && sortTypeId == 0)
                 doctors = _doctorRepository.GetAllDoctorsByType(doctorTypeId);
-            if (doctorTypeId == 0 && sortTypeId != 0)
-                doctors = _doctorRepository.GetAllDoctorsByRating(sortTypeId == 2);
-            if (doctorTypeId != 0 && sortTypeId != 0)
+            else if (doctorTypeId == 0 && sortTypeId != 0)
+                doctors = _doctorRepository.GetAllDoctorsByRating(sortTypeId == 1);
+            else if (doctorTypeId != 0 && sortTypeId != 0)
                 doctors = _doctorRepository.GetAllDoctorInfoSortingByRatingAndType(doctorTypeId, (sortTypeId == 2));
+            else
+                doctors = _doctorRepository.GetAllDoctors();
 
             return View("Index", doctors);
         }
