@@ -70,10 +70,15 @@ namespace online_doctor.Controllers
             loadDoctorSpecializations();
             loadSortTypes();
 
-            List<Doctor> doctors = _doctorRepository.GetAllDoctors();
+            ViewBag.RoleID = HttpContext.Session.GetInt32("RoleID");
+            List<Doctor> doctors = new List<Doctor>();
 
-            if (doctorTypeId == 0 && sortTypeId == 0)
-                return View("Index", doctors);
+            if (doctorTypeId != 0 && sortTypeId == 0)
+                doctors = _doctorRepository.GetAllDoctorsByType(doctorTypeId);
+            if (doctorTypeId == 0 && sortTypeId != 0)
+                doctors = _doctorRepository.GetAllDoctorsByRating(sortTypeId == 2);
+            if (doctorTypeId != 0 && sortTypeId != 0)
+                doctors = _doctorRepository.GetAllDoctorInfoSortingByRatingAndType(doctorTypeId, (sortTypeId == 2));
 
             return View("Index", doctors);
         }
@@ -82,11 +87,13 @@ namespace online_doctor.Controllers
         {
             ViewBag.RoleID = HttpContext.Session.GetInt32("RoleID");
             ViewBag.UserID = HttpContext.Session.GetInt32("UserID");
+            int? userId = (int?)HttpContext.Session.GetInt32("UserID");
 
             Doctor doctor = _doctorRepository.GetDoctorById(doctorId);
+
+            // TODO Exception
             doctor.DoctorWorkingHours = _doctorRepository.GetDoctorWorkingHours(doctorId);
 
-            int? userId = (int?)HttpContext.Session.GetInt32("UserID");
             if (userId != null)
                 ViewBag.Rating = _doctorRepository.GetDoctorRatingByUserIdAndDoctorId((int)userId, doctorId);
 
