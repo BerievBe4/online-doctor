@@ -1,0 +1,12 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>База знаний</h2>
+
+@if (ViewBag.RoleID == 3)
+{
+    @Html.ActionLink("Добавить статью", "AddArticle", new { }, new { @class = "btn btn-success" })
+}
+

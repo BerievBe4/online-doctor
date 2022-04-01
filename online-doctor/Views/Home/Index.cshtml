@@ -8,7 +8,7 @@
 {
     @Html.DropDownList("doctorTypeId", ViewBag.doctorSpecializations as SelectList)
     @Html.DropDownList("sortTypeId", ViewBag.sortTypes as SelectList)
-    <input type="submit" value="Отправить" />
+    <input type="submit" value="Сортировать" class="btn btn-info" />
 }
 
 @if (ViewBag.RoleID == 1)
