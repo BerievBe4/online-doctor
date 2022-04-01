@@ -24,7 +24,7 @@ namespace online_doctor.Repositories
         {
             DynamicParameters param = new DynamicParameters();
             param.Add("@DoctorId", DoctorId);
-            return ReturnList<Appointment>("GetAppointmentsByUserId", param).ToList<Appointment>();
+            return ReturnList<Appointment>("GetAppointmentsByDoctorId", param).ToList<Appointment>();
         }
 
         public void AddAppointment(Appointment appointment)
@@ -50,6 +50,14 @@ namespace online_doctor.Repositories
             DynamicParameters param = new DynamicParameters();
             param.Add("@AppointedStart", AppointedStart);
             return ReturnList<Appointment>("GetAppointmentByStartTime", param).FirstOrDefault<Appointment>();
+        }
+
+        public void SetIsPayment(int appointmentId, bool isPayment)
+        {
+            DynamicParameters param = new DynamicParameters();
+            param.Add("@AppointmentId", appointmentId);
+            param.Add("@isPayment", isPayment);
+            ExecuteWithoutReturn("SetIsPayments", param);
         }
     }
 }

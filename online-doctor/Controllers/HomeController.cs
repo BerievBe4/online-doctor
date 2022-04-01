@@ -134,5 +134,18 @@ namespace online_doctor.Controllers
 
             return RedirectToAction("Index", "Home");
         }
+
+        [HttpGet]
+        public IActionResult SetPayment(int appointmentId)
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult SetPayment(Payment payment)
+        {
+            _appointmentRepository.SetIsPayment(payment.AppointmentId, true);
+            return RedirectToAction("Index");
+        }
     }
 }

@@ -37,12 +37,20 @@ namespace online_doctor.Controllers
             ViewBag.Login = HttpContext.Session.GetString("Login");
 
             int UserId = (int)HttpContext.Session.GetInt32("UserID");
-            List<Appointment> appointments = _appointmentRepository.GetAppointmentsByUserId(UserId);
+            List<Appointment> appointments = new List<Appointment>();
+
+            if (ViewBag.RoleID == 2)
+                appointments = _appointmentRepository.GetAppointmentsByUserId(UserId);
+            if (ViewBag.RoleID == 3)
+                appointments = _appointmentRepository.GetAppointmentsByDoctorId(UserId);
+
             return View(appointments);
         }
 
         public IActionResult AppointmentDetail(int appointmentId)
         {
+            ViewBag.RoleID = HttpContext.Session.GetInt32("RoleID");
+
             Appointment appointment = _appointmentRepository.GetAppointmentById(appointmentId);
             return View(appointment);
         }

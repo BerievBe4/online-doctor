@@ -254,6 +254,17 @@ END;
 CALL `onlinedoctor`.`GetAppoitmentTypes`();
 
 DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SetIsPayments`(AppointmentId int(11), IsPayment bit)
+BEGIN
+	UPDATE Appointment
+    SET Appointment.PayedFor = IsPayment
+	WHERE Appointment.AppointmentId = AppointmentId;
+END;
+
+SELECT * FROM Appointment;
+CALL `onlinedoctor`.`GetAppointmentById`(1);
+
+DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `GetDayOfWeeks`()
 BEGIN
 	SELECT * FROM DayOfWeek;
@@ -298,7 +309,7 @@ CALL `onlinedoctor`.`UpdateDoctorWorkingHourByDayOfWeekId`(1, "09:00", "18:00", 
 DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `GetAppointmentsByUserId`(UserId int(11))
 BEGIN
-	SELECT AppointmentId, IdUser, FIO, Appointment as AppointmentType, AppointedStart, AppointedEnd FROM Appointment JOIN Doctor ON Appointment.IdDoctor = DoctorId JOIN AppointmentType ON Appointment.IdType = TypeId WHERE Appointment.IdUser = UserId;
+	SELECT AppointmentId, IdUser, FIO, Appointment as AppointmentType, AppointedStart, AppointedEnd, PayedFor FROM Appointment JOIN Doctor ON Appointment.IdDoctor = DoctorId JOIN AppointmentType ON Appointment.IdType = TypeId WHERE Appointment.IdUser = UserId;
 END;
 
 CALL `onlinedoctor`.`GetAppointmentsByUserId`(1);
@@ -306,10 +317,10 @@ CALL `onlinedoctor`.`GetAppointmentsByUserId`(1);
 DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `GetAppointmentsByDoctorId`(DoctorId int(11))
 BEGIN
-	SELECT AppointmentId, IdUser, FIO, Appointment as AppointmentType, AppointedStart, AppointedEnd FROM Appointment JOIN Doctor ON Appointment.IdDoctor = DoctorId JOIN AppointmentType ON Appointment.IdType = TypeId WHERE Appointment.IdDoctor = DoctorId;
+	SELECT AppointmentId, IdUser, FIO, Appointment as AppointmentType, AppointedStart, AppointedEnd, PayedFor FROM Appointment JOIN Doctor ON Appointment.IdDoctor = DoctorId JOIN AppointmentType ON Appointment.IdType = TypeId WHERE Appointment.IdDoctor = DoctorId;
 END;
 
-CALL `onlinedoctor`.`GetAppointmentsByDoctorId`(1);
+CALL `onlinedoctor`.`GetAppointmentsByDoctorId`(3);
 
 DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `AddAppointment`(DoctorId int(11), UserId int(11), TypeId int(11), AppointedStart dateTime, AppointedEnd dateTime)
@@ -330,7 +341,7 @@ CALL `onlinedoctor`.`AddAppointment`(1, 2, 1, "01.01.01", "01.01.01");
 DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `GetAppointmentById`(AppointmentId int(11))
 BEGIN
-	SELECT AppointmentId, IdUser, FIO, Appointment as AppointmentType, AppointedStart, AppointedEnd FROM Appointment JOIN Doctor ON Appointment.IdDoctor = DoctorId JOIN AppointmentType ON Appointment.IdType = TypeId WHERE Appointment.AppointmentId = AppointmentId;
+	SELECT AppointmentId, IdUser, FIO, Appointment as AppointmentType, AppointedStart, AppointedEnd, PayedFor FROM Appointment JOIN Doctor ON Appointment.IdDoctor = DoctorId JOIN AppointmentType ON Appointment.IdType = TypeId WHERE Appointment.AppointmentId = AppointmentId;
 END;
 
 CALL `onlinedoctor`.`GetAppointmentById`(4);
