@@ -318,6 +318,12 @@ BEGIN
 	VALUES (UserId, DoctorId, TypeId, AppointedStart, AppointedEnd, 0);
 END;
 
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `GetAppointmentByStartTime`(AppointedStart dateTime)
+BEGIN	
+	SELECT * FROM Appointment WHERE Appointment.AppointedStart = AppointedStart;
+END;
+
 CALL `onlinedoctor`.`AddAppointment`(1, 1, 1, "01.01.01", "01.01.01");
 CALL `onlinedoctor`.`AddAppointment`(1, 2, 1, "01.01.01", "01.01.01");
 
