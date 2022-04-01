@@ -1,4 +1,4 @@
-drop database onlinedoctor;
+#drop database onlinedoctor;
 create database onlinedoctor;
 
 use onlinedoctor;
@@ -96,6 +96,31 @@ create table Ratings(
 	foreign key (IdDoctor) references Doctor(Doctorid)
 );
 
+create table Section(
+	SectionId int(11) NOT NULL AUTO_INCREMENT,
+	SectionName varchar(255),
+	PRIMARY KEY (SectionId)
+) AUTO_INCREMENT=1;
+
+create table Subsection(
+	SubsectionId int(11) NOT NULL AUTO_INCREMENT,
+	SubsectionName varchar(255),
+	IdSection int(11),
+	foreign key (IdSection) references Section(SectionId),
+	PRIMARY KEY (SubsectionId)
+) AUTO_INCREMENT=1;
+
+create table Article(
+	ArticleId int(11) NOT NULL AUTO_INCREMENT,
+	ArticleName varchar(255),
+	ArticleText text,
+	Authors varchar(255),
+	Approved bit,
+	IdSubsection int(11),
+	foreign key (IdSubsection) references Subsection(SubsectionId),
+	PRIMARY KEY (ArticleId)
+) AUTO_INCREMENT=1;
+
 # fill datas
 INSERT INTO `onlinedoctor`.`userrole`
 (`UserRole`)
@@ -130,6 +155,10 @@ VALUES
 
 SELECT * FROM Users;
 UPDATE Users SET IdRole = 1 WHERE Users.UserId = 1;
+
+SELECT * FROM Doctor;
+
+DELETE FROM Doctor;
 #
 
 # storage procedures
@@ -178,10 +207,10 @@ CALL `onlinedoctor`.`GetUserByLogin`("123");
 DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `GetDoctorById`(DoctorId int)
 BEGIN
-	SELECT FIO, About, Education, Rating, Photo FROM Doctor JOIN Ratings ON Ratings.IdDoctor = Doctor.DoctorId WHERE doctor.DoctorId = DoctorId;
+	SELECT * FROM Doctor JOIN DoctorType ON Doctor.IdDocType = DoctorType.DocTypeId WHERE Doctor.DoctorId = DoctorId;
 END;
 
-CALL `onlinedoctor`.`GetDoctorById`(5);
+CALL `onlinedoctor`.`GetDoctorById`(3);
 
 DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `GetDoctorByLogin`(Login varchar(255))
@@ -244,7 +273,7 @@ BEGIN
 	SELECT DoctorId, StartHour, EndHour, Day FROM DoctorWorkingHours JOIN DayOfWeek ON DayOfWeek.DayOfWeekId = DoctorWorkingHours.DayOfWeekId WHERE DoctorWorkingHours.DoctorId = DoctorId;
 END;
 
-CALL `onlinedoctor`.`GetDoctorWorkingHouse`(1);
+CALL `onlinedoctor`.`GetDoctorWorkingHouse`(2);
 
 DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `GetDoctorWorkingHouseByDayofWeekId`(DoctorId int(11), DayOfWeekId int(11))
@@ -300,14 +329,6 @@ END;
 CALL `onlinedoctor`.`GetAppointmentById`(4);
 
 DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `GetAllDoctorsByType`(DoctorTypeId int(11))
-BEGIN
-	SELECT * FROM Doctor JOIN DoctorType ON Doctor.IdDocType = DoctorType.DocTypeId WHERE Doctor.IdDocType = DoctorTypeId;
-END;
-
-CALL `onlinedoctor`.`GetAllDoctorsByType`(2);
-
-DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `GetDoctorRatingByUserIdAndDoctorId`(UserId int(11), DoctorId int(11))
 BEGIN
 	SELECT * FROM Ratings WHERE Ratings.IdUser = UserId AND Ratings.IdDoctor = DoctorId;
@@ -323,25 +344,105 @@ END;
 
 CALL `onlinedoctor`.`SetDoctorRating`(1, 1, 5);
 
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `GetAllDoctorsByType`(DoctorTypeId int(11))
+BEGIN
+	SELECT * FROM Doctor JOIN DoctorType ON Doctor.IdDocType = DoctorType.DocTypeId WHERE Doctor.IdDocType = DoctorTypeId;
+END;
 
-
-
-
-
+CALL `onlinedoctor`.`GetAllDoctorsByType`(2);
 
 DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `GetAllDoctorsByRating`(IsAscSort bit)
 BEGIN
 	IF IsAscSort = 0 THEN
-		SELECT * FROM Doctor JOIN DoctorType ON Doctor.IdDocType = DoctorType.DocTypeId WHERE Doctor.IdDocType = DoctorTypeId;
+		select * from doctor left join ( select IdDoctor, avg(Rating) as Rating from ratings group by IdDoctor order by Rating asc)a on a.IdDoctor = DoctorId join (select * from DoctorType where DoctorType.DocTypeId = DocTypeId)b on b.DocTypeId = IdDocType order by Rating asc;
     ELSE
-		SELECT * FROM Doctor JOIN DoctorType ON Doctor.IdDocType = DoctorType.DocTypeId WHERE Doctor.IdDocType = DoctorTypeId;
+		select * from doctor left join ( select IdDoctor, avg(Rating) as Rating from ratings group by IdDoctor order by Rating asc)a on a.IdDoctor = DoctorId join (select * from DoctorType where DoctorType.DocTypeId = DocTypeId)b on b.DocTypeId = IdDocType order by Rating desc;
     END IF;
+END;
+
+CALL `onlinedoctor`.`GetAllDoctorsByRating`(1);
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `GetAllDoctorInfoSortingByRatingAndType`(DocTypeId int(11), IsAscSort bit)
+BEGIN
+	IF IsAscSort = 0 THEN
+		select * from doctor left join ( select IdDoctor, avg(Rating) as Rating from ratings group by IdDoctor order by Rating asc)a on a.IdDoctor = DoctorId join (select * from DoctorType where DoctorType.DocTypeId = DocTypeId)b on b.DocTypeId = IdDocType order by Rating desc;
+	ELSE
+		select * from doctor left join ( select IdDoctor, avg(Rating) as Rating from ratings group by IdDoctor order by Rating asc)a on a.IdDoctor = DoctorId join (select * from DoctorType where DoctorType.DocTypeId = DocTypeId)b on b.DocTypeId = IdDocType order by Rating asc;
+	END IF;
+END;
+
+CALL `onlinedoctor`.`GetAllDoctorInfoSortingByRatingAndType`(3, 0);
+
+# article
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `GetAllSections`()
+BEGIN
+	SELECT * FROM Section;
+END;
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `GetSectionById`(SectionId int(11))
+BEGIN
+	SELECT * FROM Section WHERE Section.SectionId = SectionId;
+END;
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `AddSection`(SectionName varchar(255))
+BEGIN
+	INSERT INTO `onlinedoctor`.`Section` (`SectionName`)
+    VALUES (SectionName);
+END;
+
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `GetAllSubections`()
+BEGIN
+	SELECT * FROM Subsection;
+END;
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `GetSubsectionById`(SubsectionId int(11))
+BEGIN
+	SELECT * FROM Subsection WHERE Subsection.SubsectionId = SubsectionId;
+END;
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `AddSubsection`(SubsectionName varchar(255), SectionId int(11))
+BEGIN
+	INSERT INTO `onlinedoctor`.`Subsection` (`SectionName`, `SectionId`)
+    VALUES (SectionName, SectionId);
 END;
 #
 
 
+create table Section(
+	SectionId int(11) NOT NULL AUTO_INCREMENT,
+	SectionName varchar(255),
+	PRIMARY KEY (SectionId)
+) AUTO_INCREMENT=1;
 
+create table Subsection(
+	SubsectionId int(11) NOT NULL AUTO_INCREMENT,
+	SubsectionName varchar(255),
+	IdSection int(11),
+	foreign key (IdSection) references Section(SectionId),
+	PRIMARY KEY (SubsectionId)
+) AUTO_INCREMENT=1;
+
+create table Article(
+	ArticleId int(11) NOT NULL AUTO_INCREMENT,
+	ArticleName varchar(255),
+	ArticleText text,
+	Authors varchar(255),
+	Approved bit,
+	IdSubsection int(11),
+	foreign key (IdSubsection) references Subsection(SubsectionId),
+	PRIMARY KEY (ArticleId)
+) AUTO_INCREMENT=1;
 
 
 INSERT INTO `onlinedoctor`.`ratings`
