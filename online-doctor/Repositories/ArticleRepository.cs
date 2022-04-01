@@ -78,7 +78,7 @@ namespace online_doctor.Repositories
         public void SetIsApprovedArticle(int articleId, bool isApproved)
         {
             DynamicParameters param = new DynamicParameters();
-            param.Add("@SubsectionId", articleId);
+            param.Add("@ArticleId", articleId);
             param.Add("@isApproved", isApproved);
             ExecuteWithoutReturn("SetIsApprovedArticle", param);
         }

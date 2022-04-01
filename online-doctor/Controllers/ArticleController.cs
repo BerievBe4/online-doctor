@@ -25,6 +25,12 @@ namespace online_doctor.Controllers
             return View(sections);
         }
 
+        public IActionResult SetApproved(int articleId)
+        {
+            _articleRepository.SetIsApprovedArticle(articleId, true);
+            return RedirectToAction("Index");
+        }
+
         public IActionResult Subsection(int sectionId)
         {
             List<Subsection> subsections = _articleRepository.GetAllSubsectionsBySectionId(sectionId);
