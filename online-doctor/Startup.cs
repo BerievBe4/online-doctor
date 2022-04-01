@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
@@ -37,6 +34,7 @@ namespace online_doctor
 
             builder.RegisterType<DoctorRepository>();
             builder.RegisterType<DoctorSpecializationRepository>();
+            builder.RegisterType<ArticleRepository>();
             builder.RegisterType<DayOfWeekRepository>();
             builder.RegisterType<AppoitmentTypeRepository>();
             builder.RegisterType<AppointmentRepository>();

@@ -1,0 +1,14 @@
+﻿@model online_doctor.Models.Article
+
+@{
+    ViewData["Title"] = "ArticleDetail";
+}
+
+<h1>@Model.ArticleName</h1>
+<h2>@Model.Authors</h2>
+
+<p>@Model.ArticleText</p>
+
+<div>
+    <a asp-action="Index" class="btn btn-default">Back to List</a>
+</div>

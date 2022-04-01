@@ -1,0 +1,49 @@
+﻿@model IEnumerable<online_doctor.Models.Article>
+
+@{
+    ViewData["Title"] = "Articles";
+}
+
+<h2>Статьи</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.ArticleName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ArticleText)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Authors)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Approved)
+                </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ArticleName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Authors)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdSection)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Approved)
+            </td>
+            <td>
+                @Html.ActionLink("Set approved", "SetApproved", new { /* id=item.PrimaryKey */ }, new { @class = "btn btn-success" })
+                @Html.ActionLink("Подробнее", "ArticleDetail", new { articleId = item.ArticleId }, new { @class = "btn btn-info" })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

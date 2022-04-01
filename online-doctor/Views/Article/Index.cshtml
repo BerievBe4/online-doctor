@@ -1,4 +1,5 @@
-﻿
+﻿@model IEnumerable<online_doctor.Models.Section>
+
 @{
     ViewData["Title"] = "Index";
 }
@@ -10,3 +11,26 @@
     @Html.ActionLink("Добавить статью", "AddArticle", new { }, new { @class = "btn btn-success" })
 }
 
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.SectionName)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SectionName)
+                </td>
+                <td>
+                    @Html.ActionLink("Details", "Subsection", new { sectionId = item.SectionId }, new { @class = "btn btn-info" })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

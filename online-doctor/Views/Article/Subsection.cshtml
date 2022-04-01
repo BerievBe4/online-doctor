@@ -1,0 +1,30 @@
+﻿@model IEnumerable<online_doctor.Models.Subsection>
+
+@{
+    ViewData["Title"] = "Subsection";
+}
+
+<h2>Подсекции</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.SubsectionName)
+                </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.SubsectionName)
+            </td>
+            <td>
+                @Html.ActionLink("Details", "Articles", new { subsectionId = item.SubsectionId }, new { @class = "btn btn-info" })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

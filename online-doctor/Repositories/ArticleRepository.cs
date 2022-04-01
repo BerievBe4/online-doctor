@@ -5,7 +5,7 @@ using online_doctor.Repositories;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace online_doctor.Views.Admin
+namespace online_doctor.Repositories
 {
     public class ArticleRepository : Repository
     {
@@ -25,53 +25,72 @@ namespace online_doctor.Views.Admin
             return ReturnList<Section>("GetSectionById", null).ToList<Section>();
         }
 
-        public List<Section> AddSection(string sectionName)
+        public void AddSection(string sectionName)
         {
             DynamicParameters param = new DynamicParameters();
             param.Add("@SectionName", sectionName);
-            return ReturnList<Section>("AddSection", param).ToList<Section>();
+            ExecuteWithoutReturn("AddSection", param);
         }
 
 
-        public List<Section> GetAllSubsections()
+        public List<Subsection> GetAllSubsections()
         {
-            return ReturnList<Section>("GetAllSubections", null).ToList<Section>();
+            return ReturnList<Subsection>("GetAllSubections", null).ToList<Subsection>();
         }
 
-        public List<Section> GetSubsectionById(int subsectionId)
+        public List<Subsection> GetSubsectionById(int subsectionId)
         {
             DynamicParameters param = new DynamicParameters();
             param.Add("@SubsectionId", subsectionId);
-            return ReturnList<Section>("GetSubsectionById", param).ToList<Section>();
+            return ReturnList<Subsection>("GetSubsectionById", param).ToList<Subsection>();
         }
 
-        public List<Section> AddSubsection(int sectionId, string subsectionName)
+        public List<Subsection> GetAllSubsectionsBySectionId(int sectionId)
+        {
+            DynamicParameters param = new DynamicParameters();
+            param.Add("@SectionId", sectionId);
+            return ReturnList<Subsection>("GetAllSubsectionsBySectionId", param).ToList<Subsection>();
+        }
+
+        public void AddSubsection(int sectionId, string subsectionName)
         {
             DynamicParameters param = new DynamicParameters();
             param.Add("@SubsectionName", subsectionName);
             param.Add("@SectionId", sectionId);
-            return ReturnList<Section>("AddSubsection", param).ToList<Section>();
+            ExecuteWithoutReturn("AddSubsection", param);
         }
 
 
-        public List<Section> GetAllArticles()
+        public Article GetArticleById(int articleId)
         {
-            return ReturnList<Section>("GetAllArticles", null).ToList<Section>();
+            DynamicParameters param = new DynamicParameters();
+            param.Add("@ArticleId", articleId);
+            return ReturnList<Article>("GetArticleById", param).FirstOrDefault<Article>();
         }
 
-        public List<Section> GetArticleById(int articleId)
+        public List<Article> GetAllArticlesBySubsectionId(int subsectionId)
+        {
+            DynamicParameters param = new DynamicParameters();
+            param.Add("@SubsectionId", subsectionId);
+            return ReturnList<Article>("GetAllArticlesBySubsectionId", param).ToList<Article>();
+        }
+
+        public void SetIsApprovedArticle(int articleId, bool isApproved)
         {
             DynamicParameters param = new DynamicParameters();
             param.Add("@SubsectionId", articleId);
-            return ReturnList<Section>("GetArticleById", param).ToList<Section>();
+            param.Add("@isApproved", isApproved);
+            ExecuteWithoutReturn("SetIsApprovedArticle", param);
         }
 
-        public List<Section> AddArticle (int sectionId, string subsectionName)
+        public void AddArticle(Article article)
         {
             DynamicParameters param = new DynamicParameters();
-            param.Add("@SubsectionName", subsectionName);
-            param.Add("@SectionId", sectionId);
-            return ReturnList<Section>("AddSubsection", param).ToList<Section>();
+            param.Add("@SubsectionId", article.IdSubsection);
+            param.Add("@ArticleName", article.ArticleName);
+            param.Add("@ArticleText", article.ArticleText);
+            param.Add("@Authors", article.Authors);
+            ExecuteWithoutReturn("AddArticle", param);
         }
     }
 }

@@ -411,11 +411,49 @@ BEGIN
 END;
 
 DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `GetAllSubsectionsBySectionId`(SectionId int(11))
+BEGIN
+	SELECT * FROM Subsection WHERE Subsection.IdSection = SectionId;
+END;
+
+SELECT * FROM Subsection WHERE Subsection.IdSection = 1;
+
+DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `AddSubsection`(SubsectionName varchar(255), SectionId int(11))
 BEGIN
-	INSERT INTO `onlinedoctor`.`Subsection` (`SectionName`, `SectionId`)
-    VALUES (SectionName, SectionId);
+	INSERT INTO `onlinedoctor`.`Subsection` (`SubsectionName`, `IdSection`)
+    VALUES (SubsectionName, SectionId);
 END;
+
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `GetArticleById`(ArticleId int(11))
+BEGIN
+	SELECT * FROM Article WHERE Article.ArticleId = Articleid;
+END;
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `GetAllArticlesBySubsectionId`(SubsectionId int(11))
+BEGIN
+	SELECT * FROM Article WHERE Article.IdSubsection = SubsectionId;
+END;
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SetIsApprovedArticle`(ArticleId int(11), isApproved bit)
+BEGIN
+	UPDATE Article 
+    SET Article.Approved = isApproved
+    WHERE Article.ArticleId = ArticleId;
+END;
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `AddArticle`(SubsectionId int(11), ArticleName varchar(255), ArticleText text, Authors varchar(255))
+BEGIN
+	INSERT INTO `onlinedoctor`.`Article` (`ArticleName`, `ArticleText`, `Authors`, `Approved`, `IdSubsection`)
+    VALUES (ArticleName, ArticleText, Authors, 0, SubsectionId);
+END;
+
+SELECT * FROM Article;
 #
 
 
