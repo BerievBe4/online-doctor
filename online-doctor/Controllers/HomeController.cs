@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using online_doctor.Models;
 using online_doctor.Repositories;
+using System;
 using System.Collections.Generic;
 
 namespace online_doctor.Controllers
@@ -113,6 +114,7 @@ namespace online_doctor.Controllers
             Appointment appointment = new Appointment();
             appointment.IdDoctor = doctorID;
             appointment.IdUser = userID;
+            appointment.AppointedStart = DateTime.Now;
 
             return View(appointment);
         }
@@ -120,7 +122,13 @@ namespace online_doctor.Controllers
         [HttpPost]
         public IActionResult CreateAppoitment(Appointment appointment)
         {
-            // TODO validate appointment
+            Appointment existAppointment = _appointmentRepository.GetAppointmentByStartTime(appointment.AppointedStart);
+            if (existAppointment != null)
+            {
+                appointment.ErrorMessage = "Такое время уже заннято.";
+                return View("CreateAppoitment", appointment);
+            }
+
             appointment.AppointedEnd = appointment.AppointedStart.AddHours(1);
             _appointmentRepository.AddAppointment(appointment);
 

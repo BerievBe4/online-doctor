@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using online_doctor.Models;
 using online_doctor.Providers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -26,7 +27,7 @@ namespace online_doctor.Repositories
             return ReturnList<Appointment>("GetAppointmentsByUserId", param).ToList<Appointment>();
         }
 
-        public List<Appointment> AddAppointment(Appointment appointment)
+        public void AddAppointment(Appointment appointment)
         {
             DynamicParameters param = new DynamicParameters();
             param.Add("@DoctorId", appointment.IdDoctor);
@@ -34,7 +35,7 @@ namespace online_doctor.Repositories
             param.Add("@TypeId", appointment.IdType);
             param.Add("@AppointedStart", appointment.AppointedStart);
             param.Add("@AppointedEnd", appointment.AppointedEnd);
-            return ReturnList<Appointment>("GetAppointmentsByUserId", param).ToList<Appointment>();
+            ExecuteWithoutReturn("AddAppointment", param);
         }
 
         public Appointment GetAppointmentById(int AppointmentId)
@@ -42,6 +43,13 @@ namespace online_doctor.Repositories
             DynamicParameters param = new DynamicParameters();
             param.Add("@AppointmentId", AppointmentId);
             return ReturnList<Appointment>("GetAppointmentById", param).FirstOrDefault<Appointment>();
+        }
+
+        public Appointment GetAppointmentByStartTime(DateTime AppointedStart)
+        {
+            DynamicParameters param = new DynamicParameters();
+            param.Add("@AppointedStart", AppointedStart);
+            return ReturnList<Appointment>("GetAppointmentByStartTime", param).FirstOrDefault<Appointment>();
         }
     }
 }
