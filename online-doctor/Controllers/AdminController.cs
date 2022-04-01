@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using online_doctor.Filters;
 using online_doctor.Models;
 using online_doctor.Repositories;
 
@@ -13,17 +14,20 @@ namespace online_doctor.Controllers
             _doctorRepository = doctorRepository;
         }
 
+        [IsAuthorizedAdmin]
         public IActionResult Index()
         {
             return View();
         }
 
+        [IsAuthorizedAdmin]
         [HttpGet]
         public IActionResult AddDoctor()
         {
             return View();
         }
 
+        [IsAuthorizedAdmin]
         [HttpPost]
         public IActionResult AddDoctor(Doctor doctor)
         {

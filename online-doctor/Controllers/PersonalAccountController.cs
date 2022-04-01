@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using online_doctor.Filters;
 using online_doctor.Models;
 using online_doctor.Repositories;
+using online_sdoctor.Filters;
 using Syncfusion.XlsIO;
 using System;
 using System.Collections.Generic;
@@ -30,23 +32,22 @@ namespace online_doctor.Controllers
             _hostingEnvironment = hostingEnvironment;
         }
 
+        [DataFilter]
+        [IsExistUser]
         public IActionResult Index()
         {
-            ViewBag.RoleID = HttpContext.Session.GetInt32("RoleID");
-            ViewBag.UserID = HttpContext.Session.GetInt32("UserID");
-            ViewBag.Login = HttpContext.Session.GetString("Login");
-
-            int UserId = (int)HttpContext.Session.GetInt32("UserID");
             List<Appointment> appointments = new List<Appointment>();
 
             if (ViewBag.RoleID == 2)
-                appointments = _appointmentRepository.GetAppointmentsByUserId(UserId);
+                appointments = _appointmentRepository.GetAppointmentsByUserId(ViewBag.UserID);
             if (ViewBag.RoleID == 3)
-                appointments = _appointmentRepository.GetAppointmentsByDoctorId(UserId);
+                appointments = _appointmentRepository.GetAppointmentsByDoctorId(ViewBag.UserID);
 
             return View(appointments);
         }
 
+        [DataFilter]
+        [IsExistUser]
         public IActionResult AppointmentDetail(int appointmentId)
         {
             ViewBag.RoleID = HttpContext.Session.GetInt32("RoleID");
@@ -55,6 +56,7 @@ namespace online_doctor.Controllers
             return View(appointment);
         }
 
+        [IsExistUser]
         public IActionResult GetAppointmentDetailsInExcel(int appointmentId)
         {
             Appointment appointment = _appointmentRepository.GetAppointmentById(appointmentId);
@@ -113,7 +115,7 @@ namespace online_doctor.Controllers
             }
         }
 
-        //[is doctor]
+        [IsAuthorizedDoctor]
         [HttpGet]
         public IActionResult ChangeDoctorInformation(int doctorId)
         {
@@ -126,6 +128,7 @@ namespace online_doctor.Controllers
             return View(doctor);
         }
 
+        [IsAuthorizedDoctor]
         [HttpPost]
         public IActionResult ChangeDoctorInformation(Doctor doctor)
         {
@@ -153,6 +156,7 @@ namespace online_doctor.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        [IsAuthorizedDoctor]
         [HttpGet]
         public IActionResult ChangeDoctorShedule(int doctorId)
         {
@@ -163,6 +167,7 @@ namespace online_doctor.Controllers
             return View(doctorWorkingHours);
         }
 
+        [IsAuthorizedDoctor]
         [HttpPost]
         public IActionResult ChangeDoctorShedule(DoctorWorkingHours doctorWorkingHours)
         {

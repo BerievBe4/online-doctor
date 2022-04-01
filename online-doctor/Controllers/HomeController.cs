@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using online_doctor.Filters;
 using online_doctor.Models;
 using online_doctor.Repositories;
+using online_sdoctor.Filters;
 using System;
 using System.Collections.Generic;
 
@@ -54,15 +56,15 @@ namespace online_doctor.Controllers
             return View(doctors);
         }
 
+        [DataFilter]
+        [IsExistUser]
         public IActionResult EvaluateDoctor(int rating, int DoctorId)
         {
-            int userId = (int)HttpContext.Session.GetInt32("UserID");
-            _doctorRepository.SetDoctorRating(userId, DoctorId, rating);
+            _doctorRepository.SetDoctorRating(ViewBag.UserID, DoctorId, rating);
 
             loadDoctorSpecializations();
             loadSortTypes();
 
-            ViewBag.RoleID = HttpContext.Session.GetInt32("RoleID");
             List<Doctor> doctors = _doctorRepository.GetAllDoctors();
 
             return View("Index", doctors);
@@ -105,6 +107,7 @@ namespace online_doctor.Controllers
             return View(doctor);
         }
 
+        [IsExistUser]
         [HttpGet]
         public IActionResult CreateAppoitment(int userID, int doctorID)
         {
@@ -119,6 +122,7 @@ namespace online_doctor.Controllers
             return View(appointment);
         }
 
+        [IsExistUser]
         [HttpPost]
         public IActionResult CreateAppoitment(Appointment appointment)
         {
@@ -135,12 +139,14 @@ namespace online_doctor.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        [IsExistUser]
         [HttpGet]
         public IActionResult SetPayment(int appointmentId)
         {
             return View();
         }
 
+        [IsExistUser]
         [HttpPost]
         public IActionResult SetPayment(Payment payment)
         {
